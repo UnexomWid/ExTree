@@ -1,2 +1,2 @@
 # About
-An expression tree visualizer.
+This is an expression tree visualizer.
