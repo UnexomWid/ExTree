@@ -1,5 +1,10 @@
 #include "charlib.h"
 
+std::string toString(const char token) {
+    std::string string(1, token);
+    return string;
+}
+
 std::string toLower(const std::string &token) {
     std::string lower;
     lower.reserve(token.length());
@@ -35,9 +40,4 @@ bool isSeparator(char token) {
 
 bool isDecimalSeparator(const char token) {
     return token == '.';
-}
-
-std::string toString(const char token) {
-    std::string string(1, token);
-    return string;
 }

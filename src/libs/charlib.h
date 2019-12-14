@@ -3,6 +3,8 @@
 
 #include <string>
 
+std::string toString(const char token);
+
 std::string toLower(const std::string &token);
 
 bool isSpace(const char token);
@@ -18,7 +20,5 @@ bool isRightSeparator(const char token);
 bool isSeparator(char token);
 
 bool isDecimalSeparator(const char token);
-
-std::string toString(const char token);
 
 #endif // CHARLIB_H
