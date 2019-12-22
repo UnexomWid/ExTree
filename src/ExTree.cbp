@@ -32,6 +32,17 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="libs/node.cpp" />
+		<Unit filename="libs/node.h">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="libs/stack.cpp">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="libs/stack.h">
+			<Option compile="1" />
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
