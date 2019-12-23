@@ -1,6 +1,7 @@
 #include <iostream>
 #include <graphics.h>
 #include "libs/stack.h"
+#include "libs/queue.h"
 
 using namespace std;
 
@@ -8,8 +9,8 @@ const int MAX_HEIGHT = getmaxheight()*9.5/10;   //871
 const int MAX_WIDTH = getmaxwidth()/4;  //1594
 int x,y;
 
-enum Language{
-    EN,DE,RO,FR
+enum ButtonType{
+    EN,DE,RO,FR,HELP,ABOUT, ANIM_EXE, DIR_EXE
 }lng;
 
 void ClearButtons()
@@ -279,29 +280,16 @@ int main()
 {
     /* First read from the console then open the window*/
 
-//    initwindow(MAX_HEIGHT,MAX_HEIGHT,"ExTree",MAX_WIDTH);
-//    DrawButtons_RO();
-//    while(1)
-//    {
-//        getmouseclick(WM_LBUTTONDOWN,x,y);
-//        SetLanguage();
-//    }
-//    getch();
+    initwindow(MAX_HEIGHT,MAX_HEIGHT,"ExTree",MAX_WIDTH);
+    DrawButtons_RO();
+    while(1)
+    {
+        getmouseclick(WM_LBUTTONDOWN,x,y);
+        SetLanguage();
+    }
+    getch();
 
-//    Stack S;
-//    S.pop();
-//    S.push("as");
-//    cout<<S.top()<<endl;
-//    S.push("bas");
-//    cout<<S.top()<<endl;
-//    S.push("das");
-//    cout<<S.top()<<endl;
-//    S.pop();
-//    S.pop();
-//    S.pop();
-//    S.pop();
-//    S.pop();
-//    cout<<S.top();
+
 
     return 0;
 }

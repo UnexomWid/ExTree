@@ -1,13 +1,13 @@
 #include "stack.h"
 
 Stack::Stack(){
-    length=0;
-    first=new Node;
+    length = 0;
+    first = new Node;
 }
 void Stack::push(std::string element)
 {
-    Node* node= new Node;
-    node->data=element;
+    Node* node = new Node;
+    node->data = element;
     node->next = first;
     first = node;
 

@@ -4,7 +4,8 @@
 #include "node.h"
 
 struct Stack{
-    Node * first;
+    Node* first;
+
     /// The size of the stack.
     unsigned int length;
 
@@ -18,16 +19,21 @@ struct Stack{
 
     bool isEmpty();
 };
-/// Pushes the element onto the stack.
-void push(std::string, Stack &);
+/*
+    Nu mai stiu de ce am pastrat portiunea de mai jos, dar vad ca functioneaza si fara ea.
+    Daca nu mai avem nevoie, imi dai un mesaj si o sterg.
+*/
 
-/// Deletes the last added element from the stack.
-void pop(Stack &);
-
-/// Returns the top of the stack.
-std::string top(Node *);
-
-/// Return whether is empty or not.
-bool isEmpty(Node *);
+///// Pushes the element onto the stack.
+//void push(std::string, Stack &);
+//
+///// Deletes the last added element from the stack.
+//void pop(Stack &);
+//
+///// Returns the top of the stack.
+//std::string top(Node *);
+//
+///// Return whether is empty or not.
+//bool isEmpty(Node *);
 
 #endif // STACK_H_INCLUDED
