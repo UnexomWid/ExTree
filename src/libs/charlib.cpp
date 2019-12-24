@@ -41,3 +41,7 @@ bool isSeparator(char token) {
 bool isDecimalSeparator(const char token) {
     return token == '.';
 }
+
+bool isArgumentSeparator(const char token) {
+    return token == ',';
+}

@@ -21,4 +21,6 @@ bool isSeparator(char token);
 
 bool isDecimalSeparator(const char token);
 
+bool isArgumentSeparator(const char token);
+
 #endif // CHARLIB_H
