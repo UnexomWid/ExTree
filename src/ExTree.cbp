@@ -32,6 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="libs/buttons.cpp" />
+		<Unit filename="libs/buttons.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="libs/node.cpp" />
 		<Unit filename="libs/node.h">
 			<Option compile="1" />
@@ -47,9 +51,11 @@
 			<Option compile="1" />
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="libs/tree.cpp" />
+		<Unit filename="libs/tree.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="main.cpp" />
-		<Unit filename="tree.cpp" />
-		<Unit filename="tree.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
