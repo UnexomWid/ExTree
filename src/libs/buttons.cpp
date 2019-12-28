@@ -2,6 +2,7 @@
 
 struct textsettingstype textInfo;
 struct linesettingstype lineInfo;
+struct fillsettingstype fillInfo;
 
 int mouseX, mouseY;
 
@@ -17,8 +18,15 @@ buttonSettings about[4];
 buttonSettings quit[4];
 buttonSettings options_lng[4];
 buttonSettings options_back[4];
+buttonSettings options_themes[4];
+buttonSettings about_back[4];
+buttonSettings newExp[4];
 
 bool isInitialized = false;
+bool isButtonSettingsDeclared = false;
+//bool linkPressed = false;
+
+int var1,var2;          // DECLARAREA VARIABILELOR PROVIZORII ---------------------
 
 void defineButtonSettings()
 {
@@ -60,6 +68,18 @@ void defineButtonSettings()
     options_back[0].posX = 1385;
     options_back[0].posY = 665;
 
+    options_themes[0].word = "Theme";
+    options_themes[0].posX = 1360;
+    options_themes[0].posY = 425;
+
+    about_back[0].word = "Back";
+    about_back[0].posX = 1385;
+    about_back[0].posY = 665;
+
+    newExp[0].word = "New expression";
+    newExp[0].posX = 35;
+    newExp[0].posY = 5;
+
     // Romanian.
 
     animEval_1[1].word = "Evaluare";
@@ -97,6 +117,18 @@ void defineButtonSettings()
     options_back[1].word = "Inapoi";
     options_back[1].posX = 1370;
     options_back[1].posY = 665;
+
+    options_themes[1].word = "Tema";
+    options_themes[1].posX = 1370;
+    options_themes[1].posY = 425;
+
+    about_back[1].word = "Inapoi";
+    about_back[1].posX = 1370;
+    about_back[1].posY = 665;
+
+    newExp[1].word = "Expresie noua";
+    newExp[1].posX = 40;
+    newExp[1].posY = 5;
 
     // German.
 
@@ -136,6 +168,18 @@ void defineButtonSettings()
     options_back[2].posX = 1370;
     options_back[2].posY = 665;
 
+    options_themes[2].word = "Thema";
+    options_themes[2].posX = 1360;
+    options_themes[2].posY = 425;
+
+    about_back[2].word = "Zuruck";
+    about_back[2].posX = 1370;
+    about_back[2].posY = 665;
+
+    newExp[2].word = "Neue Expression";
+    newExp[2].posX = 20;
+    newExp[2].posY = 5;
+
     // French.
 
     animEval_1[3].word = "Evaluation";
@@ -143,7 +187,7 @@ void defineButtonSettings()
     animEval_1[3].posY = 200;
 
     animEval_2[3].word = "animee";
-    animEval_2[3].posX = 1350;
+    animEval_2[3].posX = 1360;
     animEval_2[3].posY = 250;
 
     instantEval_1[3].word = "Evaluation";
@@ -173,19 +217,36 @@ void defineButtonSettings()
     options_back[3].word = "Revenu";
     options_back[3].posX = 1360;
     options_back[3].posY = 665;
+
+    options_themes[3].word = "Theme";
+    options_themes[3].posX = 1360;
+    options_themes[3].posY = 425;
+
+    about_back[3].word = "Revenu";
+    about_back[3].posX = 1360;
+    about_back[3].posY = 665;
+
+    newExp[3].word = "Nouvele expression";
+    newExp[3].posX = 5;
+    newExp[3].posY = 5;
 }
 
 void readInput()
 {
     // De implementat.
+    std::cin>>var1>>var2;
 }
 
-void initializeWindow(THEME theme)  // Trebuie sa mai faci celelalte doua teme.
+void initializeWindow(THEME theme)
 {
+    if(!isButtonSettingsDeclared)
+    {
+        isButtonSettingsDeclared = true;
+        defineButtonSettings();
+    }
     if(!isInitialized)
     {
         initwindow(WIDTH,HEIGHT,"ExTree");
-        defineButtonSettings();
         isInitialized = true;
     }
     switch(theme)
@@ -206,6 +267,8 @@ void initializeWindow(THEME theme)  // Trebuie sa mai faci celelalte doua teme.
 
             // Sets the line settings.
             setlinestyle(SOLID_LINE,0,1);
+
+            circle(var1,var2,10);                   // AICI DESENEAZA UN CERC ---------------- DOAR PE ACEASTA TEMA ESTE IMPLEMENTAT.
 
             drawAll();
             break;
@@ -264,7 +327,6 @@ void runProgram()
         }
         if(isOptionsPressed(mouseX,mouseY) && button != OPTIONS)
         {
-            // Call Options();
             Log("Options was pressed!");
             button = OPTIONS;
             Options();
@@ -272,15 +334,22 @@ void runProgram()
         }
         if(isAboutPressed(mouseX,mouseY) && button != ABOUT)
         {
-            // Call About();
             Log("About was pressed!");
             button = ABOUT;
+            About();
         }
         if(isQuitPressed(mouseX,mouseY) && button != QUIT)
         {
-            button = QUIT;
             Log("Quit was pressed!");
+            button = QUIT;
             closegraph();
+        }
+        if(isNewExpPressed(mouseX,mouseY))
+        {
+            closegraph(CURRENT_WINDOW);
+            isInitialized = false;
+            readInput();
+            initializeWindow();
         }
     }
 
@@ -308,6 +377,9 @@ bool isQuitPressed(int X, int Y){
     return (X >= 1310 && X <= 1570) && (Y >=645 && Y <= 725);
 }
 
+bool isNewExpPressed(int X, int Y){
+    return (X>=0 && X<=420) && (Y>=0 && Y<=60);
+}
 
 
 void drawAll(LANGUAGE lng)
@@ -316,12 +388,24 @@ void drawAll(LANGUAGE lng)
     getlinesettings(&lineInfo);
 
     drawSquares();
+    drawNewExp();
     drawTitle();
     drawAnimEval();
     drawInstantEval();
     drawOptions();
     drawAbout();
     drawQuit();
+}
+
+void drawNewExp()
+{
+    setfillstyle(SOLID_FILL,getbkcolor());
+    bar(0,0,420,60);
+
+    line(0,60,420,60);
+    line(420,60,420,0);
+    settextstyle(textInfo.font,textInfo.direction,5);
+    outtextxy(newExp[lng].posX,newExp[lng].posY,newExp[lng].word);
 }
 
 void drawSquares()
@@ -410,9 +494,42 @@ void Options()
     rectangle(1310,645,1570,725);
     outtextxy(options_back[lng].posX,options_back[lng].posY,options_back[lng].word);
 
+    // This draws the "Themes" title.
+    outtextxy(options_themes[lng].posX,options_themes[lng].posY,options_themes[lng].word);
+
+    // This draws all button themes.
+    settextstyle(textInfo.font,textInfo.direction,3);
+    rectangle(1355,485,1520,520);
+    outtextxy(1390,490,"DEFAULT");
+    rectangle(1355,530,1520,565);
+    outtextxy(1370,535,"GREEN_BLUE");
+    rectangle(1355,575,1520,610);
+    outtextxy(1410,580,"PINKY");
+
     while(button != OPTIONS_Back)
     {
         getmouseclick(WM_LBUTTONDOWN, mouseX, mouseY);
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 485 && mouseY <= 520 && button != OPTIONS_Default)
+        {
+            button = OPTIONS_Default;
+            initializeWindow(DEFAULT);
+            resetMouseClick();
+            break;
+        }
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && button != OPTIONS_Green_Blue)
+        {
+            button = OPTIONS_Green_Blue;
+            initializeWindow(GREEN_BLUE);
+            resetMouseClick();
+            break;
+        }
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && button != OPTIONS_Pinky)
+        {
+            button = OPTIONS_Pinky;
+            initializeWindow(PINKY);
+            resetMouseClick();
+            break;
+        }
         if(mouseX >= 1345 && mouseX <= 1420 && mouseY >= 280 && mouseY <= 330 && lng != EN)
         {
             lng = EN;
@@ -431,8 +548,49 @@ void Options()
         }
         if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != OPTIONS_Back)
         {
-            Log("Back was pressed!");
+            Log("Back from Options was pressed!");
             button = OPTIONS_Back;
+
+            setfillstyle(SOLID_FILL,getbkcolor());
+            bar(1275,155,WIDTH,HEIGHT);
+
+            drawNewExp();
+            drawAnimEval();
+            drawInstantEval();
+            drawOptions();
+            drawAbout();
+            drawQuit();
+            resetMouseClick();
+        }
+
+    }
+}
+
+void About()
+{
+    setfillstyle(SOLID_FILL,getbkcolor());
+    bar(1275,155,WIDTH,HEIGHT);
+
+    // This draws the "Back" button.
+    rectangle(1310,645,1570,725);
+    outtextxy(about_back[lng].posX,about_back[lng].posY,about_back[lng].word);
+
+    // This draws the link rectangle.
+    rectangle(1310,250,1570,320);
+    outtextxy(1390,265,"LINK");
+
+    while(button != ABOUT_Back)
+    {
+        getmouseclick(WM_LBUTTONDOWN,mouseX, mouseY);
+        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 250 && mouseY <= 320 /*&& linkPressed == false*/)
+        {
+            ShellExecute(HWND_DESKTOP, "open", "https://github.com/UnexomWid/ExTree", NULL, NULL, SW_SHOWDEFAULT);
+            //linkPressed = true;
+        }
+        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != ABOUT_Back)
+        {
+            Log("Back from About was pressed!");
+            button = ABOUT_Back;
 
             setfillstyle(SOLID_FILL,getbkcolor());
             bar(1275,155,WIDTH,HEIGHT);
@@ -444,8 +602,8 @@ void Options()
             drawQuit();
             resetMouseClick();
         }
-
     }
+
 }
 
 

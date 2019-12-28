@@ -12,7 +12,7 @@ int main()
 
     readInput(); // De implementat.
 
-    initializeWindow(PINKY);
+    initializeWindow();
 
     runProgram();
     return 0;
