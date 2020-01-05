@@ -3,48 +3,34 @@
 
 #include <string>
 
-/// Binary tree node definition.
-struct treeNode{
+/// Binary tree definition.
+struct BinaryTree{
     /// This holds the information within the node.
     std::string data;
 
     /// Pointer to the left child.
-    treeNode* left;
+    BinaryTree* left;
 
     /// Pointer to the right child.
-    treeNode* right;
+    BinaryTree* right;
 
     ///Pointer to parent.
-    treeNode* parent;
+    BinaryTree* parent;
 
     /// Default constructor.
-    treeNode()
-    {
-        left = new treeNode;
-        right = new treeNode;
-        parent = new treeNode;
-    }
+    BinaryTree();
 };
 
-/// Binary tree definition.
-struct Tree{
-    /// The root of the tree.
-    treeNode* root;
+/// Tree node definition (holds a binary tree as data).
+struct TreeNode {
+    /// Holds information.
+    BinaryTree* data;
 
-    /// The amount of elements in the tree.
-    unsigned int lenght;
+    /// Pointer to the next node.
+    TreeNode* next;
 
     /// Default constructor.
-    Tree();
-
-    /// Inserts a new node as a child of the specified node.
-    void insertNode(treeNode* parentNode, std::string element);
-
-    /// Deletes a node ONLY IF it has no children.
-    void deleteNode(treeNode* node);
-
-    /// Returns whether the tree is empty or not.
-    bool isEmpty();
+    TreeNode();
 };
 
 #endif // TREE_H_INCLUDED
