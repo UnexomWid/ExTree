@@ -1,7 +1,7 @@
 #include "stack.h"
 
 Stack::Stack(){
-    length = 0;
+    size = 0;
     first = new Node;
 }
 void Stack::push(std::string element)
@@ -11,12 +11,12 @@ void Stack::push(std::string element)
     node->next = first;
     first = node;
 
-    ++length;
+    ++size;
 }
 
 std::string Stack::top()
 {
-    if(length) return first->data;
+    if(size) return first->data;
 
     std::string emptyString;
     return emptyString;
@@ -24,17 +24,17 @@ std::string Stack::top()
 
 void Stack::pop()
 {
-    if(length == 0) return;
+    if(size == 0) return;
 
     Node* node = new Node;
     node = first;
     first = first->next;
     delete node;
 
-    --length;
+    --size;
 }
 
-bool Stack::isEmpty()
+bool Stack::empty()
 {
-    return length == 0;
+    return size == 0;
 }

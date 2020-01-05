@@ -7,7 +7,7 @@ struct Stack{
     Node* first;
 
     /// The size of the stack.
-    unsigned int length;
+    unsigned int size;
 
     Stack();
 
@@ -17,7 +17,7 @@ struct Stack{
 
     std::string top();
 
-    bool isEmpty();
+    bool empty();
 };
 /*
     Nu mai stiu de ce am pastrat portiunea de mai jos, dar vad ca functioneaza si fara ea.
@@ -25,15 +25,15 @@ struct Stack{
 */
 
 ///// Pushes the element onto the stack.
-//void push(std::string, Stack &);
+//void push(std::string, TreeStack &);
 //
 ///// Deletes the last added element from the stack.
-//void pop(Stack &);
+//void pop(TreeStack &);
 //
 ///// Returns the top of the stack.
 //std::string top(Node *);
 //
 ///// Return whether is empty or not.
-//bool isEmpty(Node *);
+//bool empty(Node *);
 
 #endif // STACK_H_INCLUDED
