@@ -11,22 +11,22 @@ struct Queue{
     Node* last;         //La fel ca L.ultim
 
     /// The length of the queue.
-    unsigned int length;
+    unsigned int size;
 
     /// Default constructor.
     Queue();
 
     /// Adds an element to the queue.
-    void add(std::string element);
+    void push(std::string element);
 
     /// Removes the oldest element from the queue.
-    void removeFirst();
+    void pop();
 
     /// Returns the oldest element from the queue.
-    std::string returnFirst();
+    std::string front();
 
     /// Returns whether the queue is empty or not.
-    bool isEmpty();
+    bool empty();
 };
 
 

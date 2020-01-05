@@ -1,48 +1,47 @@
 #include "queue.h"
 
 Queue::Queue(){
-    length = 0;
+    size = 0;
     first = new Node;
     last =  new Node;
 }
 
-void Queue::add(std::string element)
+void Queue::push(std::string element)
 {
     Node* node = new Node;
     node->data = element;
-    if(length == 0)
+    if(size == 0)
     {
         first = last = node;
-        ++length;
+        ++size;
         return;
     }
     last->next = node;
     last = node;
 
-    ++length;
+    ++size;
 }
 
-void Queue::removeFirst()
+void Queue::pop()
 {
-    if(length == 0) return;
+    if(size == 0) return;
 
     Node* node = new Node;
     node = first;
     first = first->next;
     delete node;
-    --length;
+    --size;
 }
 
-std::string Queue::returnFirst()
+std::string Queue::front()
 {
-    if(length > 0) return first->data;
+    if(size > 0) return first->data;
 
     std::string emptyString;
     return emptyString;
 }
 
-bool Queue::isEmpty()
+bool Queue::empty()
 {
-    if(length == 0) return true;
-    return false;
+    return size == 0;
 }
