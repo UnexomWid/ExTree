@@ -45,3 +45,21 @@ bool isDecimalSeparator(const char token) {
 bool isArgumentSeparator(const char token) {
     return token == ',';
 }
+
+bool isNumber(const std::string &token) {
+    for(char c : token)
+        if(!isDigit(c) && !isArgumentSeparator(c))
+            return false;
+    return true;
+}
+
+bool isNullOrWhitespace(const std::string &token) {
+    if(token.empty())
+        return true;
+
+    for(char i : token)
+        if(i != ' ' && i != '\0' && i != '\t')
+            return false;
+
+    return true;
+}

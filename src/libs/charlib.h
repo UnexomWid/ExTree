@@ -23,4 +23,8 @@ bool isDecimalSeparator(const char token);
 
 bool isArgumentSeparator(const char token);
 
+bool isNullOrWhitespace(const std::string &token);
+
+bool isNumber(const std::string &token);
+
 #endif // CHARLIB_H
