@@ -27,6 +27,9 @@ struct Queue{
 
     /// Returns whether the queue is empty or not.
     bool empty();
+
+    /// Returns a copy of the queue.
+    Queue copy();
 };
 
 

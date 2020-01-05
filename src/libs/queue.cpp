@@ -26,8 +26,7 @@ void Queue::pop()
 {
     if(size == 0) return;
 
-    Node* node = new Node;
-    node = first;
+    Node* node = first;
     first = first->next;
     delete node;
     --size;
@@ -44,4 +43,13 @@ std::string Queue::front()
 bool Queue::empty()
 {
     return size == 0;
+}
+
+Queue Queue::copy() {
+    Queue queue;
+    Node* n = first;
+    for(unsigned int i = 0; i < size; ++i, n = n->next)
+        queue.push(n->data);
+
+    return queue;
 }
