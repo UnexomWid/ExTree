@@ -233,8 +233,56 @@ void defineButtonSettings()
 
 void readInput()
 {
-    // De implementat.
-    std::cin>>var1>>var2;
+    char s[256];
+    std::cout << ">> ";
+    std::cin.getline(s, 256);
+
+    std::string error;
+    unsigned int errorIndex = 0;
+
+    Queue expression = toPostfix(s, error, errorIndex);
+
+    if(!error.empty()) {
+        std::cout << "ERROR: " << error << " at index " << errorIndex << "\n\n";
+        std::cout << s << '\n';
+
+        for(unsigned int i = 0; i < errorIndex; ++i)
+            std::cout << '_';
+
+        std::cout<< '^';
+    } else {
+        std::cout << "\nPostfix: " << serializePostfix(expression);
+        std::cout << "\nTree BFS: ";
+
+        BinaryTree* tree = toExpressionTree(expression);
+        std::queue<BinaryTree*> queue;
+
+        queue.push(tree);
+        while(!queue.empty()) {
+            std::cout << queue.front()->data << ' ';
+
+            if(queue.front()->left != nullptr)
+                queue.push(queue.front()->left);
+            if(queue.front()->right != nullptr)
+                queue.push(queue.front()->right);
+
+            queue.pop();
+        }
+
+        double result = evalExpressionTree(tree, error);
+
+        if(!error.empty()) {
+            std::cout << "\n\nERROR: " << error << "\n\n";
+        } else {
+            std::cout << "\n\nResult: " << result;
+        }
+    }
+
+    std::cout << "\n\nType anything to open the window...";
+
+    char x;
+    std::cin>>x; // Dummy operation to pause.
+    // Apparently, getch() from <conio.h> bugs the window.
 }
 
 void initializeWindow(THEME theme)

@@ -1,8 +1,13 @@
 #ifndef BUTTONS_H_INCLUDED
 #define BUTTONS_H_INCLUDED
 
+#include <queue>    // TEMPORARY! For testing purposes only.
 #include <graphics.h>
 #include <iostream> // Necesar pentru Log() din sectiunea de functii ajutatoare.
+
+#include "tree.h"
+#include "queue.h"
+#include "expression_parser.h"
 
 /// ----------------------------------------------------------------
 /// Declarations for all the variables.
