@@ -36,6 +36,10 @@
 		<Unit filename="libs/buttons.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="libs/charlib.cpp" />
+		<Unit filename="libs/charlib.h" />
+		<Unit filename="libs/expression_parser.cpp" />
+		<Unit filename="libs/expression_parser.h" />
 		<Unit filename="libs/node.cpp" />
 		<Unit filename="libs/node.h">
 			<Option compile="1" />
@@ -44,17 +48,16 @@
 		<Unit filename="libs/queue.h">
 			<Option compile="1" />
 		</Unit>
-		<Unit filename="libs/stack.cpp">
-			<Option target="Debug" />
-		</Unit>
+		<Unit filename="libs/stack.cpp" />
 		<Unit filename="libs/stack.h">
 			<Option compile="1" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="libs/tree.cpp" />
 		<Unit filename="libs/tree.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="libs/tree_stack.cpp" />
+		<Unit filename="libs/tree_stack.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

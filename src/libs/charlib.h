@@ -5,6 +5,8 @@
 
 std::string toString(char token);
 
+std::string toString(double token);
+
 std::string toLower(const std::string &token);
 
 bool isSpace(char token);

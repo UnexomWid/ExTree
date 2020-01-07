@@ -163,25 +163,30 @@ bool isBinaryOperator(const std::string &token) {
             lowerToken == "xor" );
 }
 
+bool isInteger(double number) {
+    return trunc(number) == number;
+}
+
 BinaryTree* toExpressionTree(Queue postfix) {
     TreeStack stack;
     postfix = postfix.copy();
 
     while(!postfix.empty()) {
-        std::string token = postfix.front();
+        std::string token = toLower(postfix.front());
         postfix.pop();
 
         if(isOperator(token)) {
             BinaryTree* tree = new BinaryTree;
 
             if(isUnaryOperator(token)) {
-                if(token == "neg") {
-                    tree->data = "-";
-                } else tree->data = token;
+                /* if(token == "neg") {
+                 *    tree->data = "-";
+                 * } else tree->data = token;*/
+                tree->data = token;
 
-                tree->right = stack.top();
+                tree->left = stack.top();
                 stack.pop();
-                tree->left = nullptr;
+                tree->right = nullptr;
 
                 stack.push(tree);
             } else {
@@ -198,9 +203,9 @@ BinaryTree* toExpressionTree(Queue postfix) {
 
             if(isUnaryFunction(token)) {
                 tree->data = token;
-                tree->right = stack.top();
+                tree->left = stack.top();
                 stack.pop();
-                tree->left = nullptr;
+                tree->right = nullptr;
 
                 stack.push(tree);
             } else {
@@ -219,9 +224,9 @@ BinaryTree* toExpressionTree(Queue postfix) {
 
             if(functionType == "_u") {
                 tree->data = token.substr(0, token.size() - 2);
-                tree->right = stack.top();
+                tree->left = stack.top();
                 stack.pop();
-                tree->left = nullptr;
+                tree->right = nullptr;
 
                 stack.push(tree);
             } else if(functionType == "_b") {
@@ -246,10 +251,327 @@ BinaryTree* toExpressionTree(Queue postfix) {
     return stack.top();
 }
 
+double evalUnaryOperator(const std::string &op, double argument, std::string &error) {
+    if(op == "neg") {
+        return -argument;
+    }
+
+    error = "Unknown unary operator '" + op + "'";
+    return 0;
+}
+
+double evalBinaryOperator(const std::string &op, double left, double right, std::string &error) {
+    if(op == "+") {
+        return left + right;
+    }
+    if(op == "-") {
+        return left - right;
+    }
+    if(op == "*") {
+        return left * right;
+    }
+    if(op == "/") {
+        if(right == 0) {
+            error = "Cannot divide by 0";
+            return 0;
+        } else return left / right;
+    }
+    if(op == "\\") {
+        if(right == 0) {
+            error = "Cannot divide by 0";
+            return 0;
+        } else return (int) (left / right);
+    }
+    if(op == "=") {
+        return left == right;
+    }
+    if(op == "<>") {
+        return left != right;
+    }
+    if(op == "<") {
+        return left < right;
+    }
+    if(op == "<=") {
+        return left <= right;
+    }
+    if(op == ">") {
+        return left > right;
+    }
+    if(op == ">=") {
+        return left >= right;
+    }
+    if(op == "not") {
+        if(!isInteger(left)) {
+            error = "Cannot apply 'not' operator on floating point number " + toString(left);
+            return 0;
+        }
+        return ~(int) left;
+    }
+    if(op == "and") {
+        if(!isInteger(left) || !isInteger(right)) {
+            error = "Cannot apply 'and' operator on floating point numbers " + toString(left) + " and " + toString(right);
+            return 0;
+        }
+        return (int) left & (int) right;
+    }
+    if(op == "or") {
+        if(!isInteger(left) || !isInteger(right)) {
+            error = "Cannot apply 'or' operator on floating point numbers " + toString(left) + " and " + toString(right);
+            return 0;
+        }
+        return (int) left | (int) right;
+    }
+    if(op == "xor") {
+        if(!isInteger(left) || !isInteger(right)) {
+            error = "Cannot apply 'xor' operator on floating point numbers " + toString(left) + " and " + toString(right);
+            return 0;
+        }
+        return (int) left ^ (int) right;
+    }
+
+    error = "Unknown binary operator '" + op + "'";
+    return 0;
+}
+
+double evalUnaryFunction(const std::string &function, double argument, std::string &error) {
+    if(function == "abs") {
+        return fabs(argument);
+    }
+    if(function == "acos") {
+        if(argument < -1 || argument > 1) {
+            error = "Value " + toString(argument) + " out of range for function 'acos'";
+            return 0;
+        }
+        return acos(argument);
+    }
+    if(function == "asin") {
+        if(argument < -1 || argument > 1) {
+            error = "Value " + toString(argument) + " out of range for function 'asin'";
+            return 0;
+        }
+        return asin(argument);
+    }
+    if(function == "atan") {
+        if(argument < -1 || argument > 1) {
+            error = "Value " + toString(argument) + " out of range for function 'atan'";
+            return 0;
+        }
+        return atan(argument);
+    }
+    if(function == "ceil") {
+        return ceil(argument);
+    }
+    if(function == "cos") {
+        return cos(argument);
+    }
+    if(function == "cosh") {
+        try {
+            return cosh(argument);
+        } catch(std::exception &e) {
+            error = "Value " + toString(argument) + " is too large for function 'cosh'";
+            return 0;
+        }
+    }
+    if(function == "exp") {
+        try {
+            return exp(argument);
+        } catch(std::exception &e) {
+            error = "Value " + toString(argument) + " is too large for function 'exp'";
+            return 0;
+        }
+    }
+    if(function == "floor") {
+        return floor(argument);
+    }
+    if(function == "log") {
+        if(argument <= 0) {
+            error = "Value " + toString(argument) + " out of range for unary function 'log'";
+            return 0;
+        }
+        return log(argument);
+    }
+    if(function == "log10") {
+        if(argument <= 0) {
+            error = "Value " + toString(argument) + " out of range for function 'log10'";
+            return 0;
+        }
+        return log10(argument);
+    }
+    if(function == "sign") {
+        if(argument == 0)
+            return 0;
+        if(argument < 0)
+            return -1;
+        return 1;
+    }
+    if(function == "sin") {
+        return sin(argument);
+    }
+    if(function == "sinh") {
+        try {
+            return sinh(argument);
+        } catch(std::exception &e) {
+            error = "Value " + toString(argument) + " is too large for function 'sinh'";
+            return 0;
+        }
+    }
+    if(function == "sqrt") {
+        try {
+            return sqrt(argument);
+        } catch(std::exception &e) {
+            error = "Value " + toString(argument) + " cannot be negative for function 'sqrt'";
+            return 0;
+        }
+    }
+    if(function == "tan") {
+        return tan(argument);
+    }
+    if(function == "tanh") {
+        try {
+            return tanh(argument);
+        } catch(std::exception &e) {
+            error = "Value " + toString(argument) + " is too large for function 'tanh'";
+            return 0;
+        }
+    }
+    if(function == "truncate") {
+        return trunc(argument);
+    }
+
+    error = "Unknown unary function '" + function + "'";
+    return 0;
+}
+
+double evalBinaryFunction(const std::string &function, double left, double right, std::string &error) {
+    if(function == "atan2") {
+        try {
+            return atan2(left, right);
+        } catch(std::exception &e) {
+            error = "Values " + toString(left) + " and " + toString(right) + " cannot be zero for function 'tanh'";
+            return 0;
+        }
+    }
+    if(function == "bigmul") {
+        if(!isInteger(left) || !isInteger(right)) {
+            error = "Cannot apply 'bigmul' function on floating point numbers " + toString(left) + " and " + toString(right);
+            return 0;
+        }
+
+        return left * right;
+    }
+    if(function == "ieeeremainder") {
+        if(right == 0) {
+            error = "Value " + toString(right) + " cannot be zero for function 'ieeeremainder'";
+            return 0;
+        }
+
+        return left - round(left / right) * right;
+    }
+    if(function == "log") {
+        if(right == 0 && left == 1)
+            return 0;
+        if(right <= 0) {
+            error = "Cannot apply 'log' binary function on zero or negative base " + toString(right);
+            return 0;
+        }
+        if(left <= 0) {
+            error = "Value " + toString(left) + " out of range for function 'log'";
+            return 0;
+        }
+
+        return log(left) / log(right);
+    }
+    if(function == "max") {
+        return left >= right ? left : right;
+    }
+    if(function == "min") {
+        return left <= right ? left : right;
+    }
+    if(function == "pow") {
+        if(left < 0 && !isInteger(right)) {
+            error = "Value " + toString(right) + " out of range for function 'pow'";
+            return 0;
+        }
+        if(left == 0 && right == 0) {
+            error = "Values " + toString(left) + " and " + toString(right) + " cannot be zero for function 'pow'";
+            return 0;
+        }
+        if(left == 0 && right < 0) {
+            error = "Cannot apply 'pow' function on zero base " + toString(left) + " and negative exponent " + toString(right);
+            return 0;
+        }
+
+        try {
+            return pow(left, right);
+        } catch(std::exception &e) {
+            error = "Values " + toString(left) + " and " + toString(right) + " are too large or too small for function 'pow'";
+            return 0;
+        }
+    }
+
+    error = "Unknown binary function '" + function + "'";
+    return 0;
+}
+
+double evalExpressionTree(BinaryTree* tree, std::string &error) {
+    if(tree == nullptr || !error.empty())
+        return 0;
+
+    if(tree->left == nullptr && tree->right == nullptr) {
+        if(!isOperand(tree->data)) {
+            error = "Expected arguments for operator or function '" + tree->data + "'";
+            return 0;
+        }
+        return stod(tree->data);
+    }
+
+    if(isBinaryOperator(tree->data)) {
+        if((tree->left == nullptr || tree->right == nullptr) && !isUnaryOperator(tree->data)) {
+            error = "Expected two arguments for binary operator '" + tree->data + "'";
+            return 0;
+        }
+        if(tree->right != nullptr)
+            return evalBinaryOperator(tree->data, evalExpressionTree(tree->left, error), evalExpressionTree(tree->right, error), error);
+    }
+    if(isUnaryOperator(tree->data)) {
+        if(tree->left == nullptr) {
+            error = "Expected argument for unary operator '" + tree->data + "'";
+            return 0;
+        }
+        if(tree->right != nullptr) {
+            error = "Unexpected second argument " + tree->right->data + " for unary operator '" + tree->data + "'";
+            return 0;
+        }
+        return evalUnaryOperator(tree->data, evalExpressionTree(tree->left, error), error);
+    }
+    if(isBinaryFunction(tree->data)) {
+        if((tree->left == nullptr || tree->right == nullptr) && !isUnaryFunction(tree->data)) {
+            error = "Expected two arguments for binary function '" + tree->data + "'";
+            return 0;
+        }
+        if(tree->right != nullptr)
+            return evalBinaryFunction(tree->data, evalExpressionTree(tree->left, error), evalExpressionTree(tree->right, error), error);
+    }
+    if(isUnaryFunction(tree->data)) {
+        if(tree->left == nullptr) {
+            error = "Expected argument for unary function '" + tree->data + "'";
+            return 0;
+        }
+        if(tree->right != nullptr) {
+            error = "Unexpected second argument " + tree->right->data + " for unary function '" + tree->data + "'";
+            return 0;
+        }
+        return evalUnaryFunction(tree->data, evalExpressionTree(tree->left, error), error);
+    }
+
+    error = "Unexpected arguments for operand '" + tree->data + "'";
+    return 0;
+}
+
 Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex) {
     Queue queue;
     Stack stack;
-
+    // TODO: Fix variable naming.
     bool previousIsOperand = false;
     uint32_t length = strlen(infix);
 
@@ -299,7 +621,8 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             const char* start = infix + i;
             uint32_t count = 1;
 
-            while(i + 1 < length && isAlpha(infix[i + 1])) {
+            while(i + 1 < length && (isAlpha(infix[i + 1])  ||
+                                     isDigit(infix[i + 1]))) {
                 ++count;
                 ++i;
             }
@@ -606,7 +929,7 @@ Queue substitute(Queue expression, const std::string* variables, const double* v
     std::string stringValues[count];
 
     for(uint32_t i = 0; i < count; ++i)
-        stringValues[i] = std::to_string(values[i] > 0 ? values[i] : -1 * values[i]);
+        stringValues[i] = toString(values[i] > 0 ? values[i] : -1 * values[i]);
 
     while(!expression.empty()) {
         std::string token = expression.front();
@@ -636,7 +959,7 @@ char* substitute(const char* expression, const std::string* variables, const dou
     sub.reserve(sub.size() > 128 ? 2 * sub.size() : 256); // To minimize the amount of re-allocations.
 
     for(uint32_t i = 0; i < count; ++i) {
-        std::string value = std::to_string(values[i]);
+        std::string value = toString(values[i]);
         size_t pos = sub.find(variables[i]);
 
         while (pos != std::string::npos) {
@@ -650,397 +973,6 @@ char* substitute(const char* expression, const std::string* variables, const dou
     char* c = (char*) malloc((sub.size() + 1) * sizeof(char));
     strcpy(c, sub.c_str());
     return c;
-}
-
-double evalPostfix(Queue postfix) {
-    Stack stack;
-
-    while(!postfix.empty()) {
-        std::string token = postfix.front();
-        postfix.pop();
-
-        if(isOperator(token)) {
-            if(token == "+") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(op1 + op2));
-                stack.push(result);
-            } else if(token == "-") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(op1 - op2));
-                stack.push(result);
-            } else if(token == "*") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(op1 * op2));
-                stack.push(result);
-            } else if(token == "/") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(op1 / op2));
-                stack.push(result);
-            } else if(token == "%") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string((int) op1 % (int) op2));
-                stack.push(result);
-            } else if(token == "neg") {
-                double op = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string((-1) * op));
-                stack.push(result);
-            }
-        } else if(isFunction(token) || (token.size() > 2 && isFunction(token.substr(0, token.size() - 2)))) {
-            if(token == "pow") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(pow(op1, op2)));
-                stack.push(result);
-            } else if(token == "log_u") {
-                double op = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(log(op)));
-                stack.push(result);
-            } else if(token == "log_b") {
-                double op2 = stod(stack.top());
-                stack.pop();
-                double op1 = stod(stack.top());
-                stack.pop();
-
-                std::string result(std::to_string(log(op1) / log(op2)));
-                stack.push(result);
-            }
-        } else {
-            char *tmp;
-            double value = strtod(token.c_str(), &tmp);
-
-            // Not a number.
-            if(*tmp)
-                stack.push("0"); // The default value of variables.
-            else stack.push(token);
-        }
-    }
-
-    return stod(stack.top());
-}
-
-double evalPostfix(const char* postfix) {
-    Stack stack;
-
-    char *tokens = (char*) malloc((strlen(postfix) + 1) * sizeof(char));
-    strcpy(tokens, postfix);
-    char *token = strtok(tokens, " ");
-
-    while(token != nullptr) {
-        if(strlen(token) == 1 && isOperator(token)) {
-            switch(token[0]) {
-                case '+': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 + op1));
-                    stack.push(result);
-                    break;
-                } case '-': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 - op1));
-                    stack.push(result);
-                    break;
-                } case '*': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 * op1));
-                    stack.push(result);
-                    break;
-                } case '/': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 / op1));
-                    stack.push(result);
-                    break;
-                } case '%': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((int32_t) op2 % (int32_t) op1));
-                    stack.push(result);
-                    break;
-                } case '^': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(pow(op2, op1)));
-                    stack.push(result);
-                    break;
-                } case 'n': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((-1) * op1));
-                    stack.push(result);
-                    break;
-                }
-            }
-        } else {
-            char *tmp;
-            double value = strtod(token, &tmp);
-
-            // Not a number.
-            if(*tmp)
-                stack.push("0"); // The default value of variables.
-            else stack.push(token);
-        }
-
-        token = strtok(nullptr, " ");
-    }
-
-    return stod(stack.top());
-}
-
-double evalPostfix(Queue postfix, const std::string* variables, const double* values, const uint32_t count) {
-    Stack stack;
-
-    while(!postfix.empty()) {
-        std::string token = postfix.front();
-        postfix.pop();
-
-        if(token.length() == 1 && isOperator(token)) {
-            switch(token.at(0)) {
-                case '+': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 + op1));
-                    stack.push(result);
-                    break;
-                } case '-': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 - op1));
-                    stack.push(result);
-                    break;
-                } case '*': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 * op1));
-                    stack.push(result);
-                    break;
-                } case '/': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 / op1));
-                    stack.push(result);
-                    break;
-                } case '%': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((int32_t) op2 % (int32_t) op1));
-                    stack.push(result);
-                    break;
-                } case '^': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(pow(op2, op1)));
-                    stack.push(result);
-                    break;
-                } case 'n': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((-1) * op1));
-                    stack.push(result);
-                    break;
-                }
-            }
-        } else {
-            char *tmp;
-            double value = strtod(token.c_str(), &tmp);
-
-            // Not a number.
-            if(*tmp) {
-                uint32_t i;
-
-                for(i = 0; i < count; ++i) {
-                    if(variables[i] == token) {
-                        stack.push(std::to_string(values[i]));
-                        break;
-                    }
-                }
-
-                if(i == count)
-                    stack.push(std::to_string(0)); // The default value of variables.
-            }
-            else stack.push(token);
-        }
-    }
-
-    return stod(stack.top());
-}
-
-double evalPostfix(const char* postfix, const std::string* variables, const double* values, const uint32_t count) {
-    Stack stack;
-
-    char *tokens = (char*) malloc((strlen(postfix) + 1) * sizeof(char));
-    strcpy(tokens, postfix);
-    char *token = strtok(tokens, " ");
-
-    while(token != nullptr) {
-        if(strlen(token) == 1 && isOperator(token)) {
-            switch(token[0]) {
-                case '+': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 + op1));
-                    stack.push(result);
-                    break;
-                } case '-': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 - op1));
-                    stack.push(result);
-                    break;
-                } case '*': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 * op1));
-                    stack.push(result);
-                    break;
-                } case '/': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(op2 / op1));
-                    stack.push(result);
-                    break;
-                } case '%': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((int32_t) op2 % (int32_t) op1));
-                    stack.push(result);
-                    break;
-                } case '^': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-                    double op2 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string(pow(op2, op1)));
-                    stack.push(result);
-                    break;
-                } case 'n': {
-                    double op1 = stod(stack.top());
-                    stack.pop();
-
-                    std::string result(std::to_string((-1) * op1));
-                    stack.push(result);
-                    break;
-                }
-            }
-        } else {
-            char *tmp;
-            double value = strtod(token, &tmp);
-
-            // Not a number.
-            if(*tmp) {
-                uint32_t i;
-
-                for(i = 0; i < count; ++i) {
-                    if(variables[i] == token) {
-                        stack.push(std::to_string(values[i]));
-                        break;
-                    }
-                }
-
-                if(i == count)
-                    stack.push(std::to_string(0)); // The default value of variables.
-            }
-            else stack.push(token);
-        }
-
-        token = strtok(nullptr, " ");
-    }
-
-    return stod(stack.top());
-}
-
-double evalInfix(const char* infix) {
-    std::string error;
-    uint32_t errorIndex;
-    return evalPostfix(toPostfix(infix, error, errorIndex));
-}
-
-double evalInfix(const char* infix, const std::string* variables, const double* values, const uint32_t count) {
-    std::string error;
-    uint32_t errorIndex;
-    return evalPostfix(toPostfix(infix, error, errorIndex), variables, values, count);
 }
 
 char* serializePostfix(Queue postfix) {

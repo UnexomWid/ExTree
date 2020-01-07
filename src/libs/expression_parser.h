@@ -22,8 +22,6 @@
 #include "charlib.h"
 #include "tree_stack.h"
 
-BinaryTree* toExpressionTree(Queue postfix);
-
 bool isOperator(const std::string &token);
 
 bool isOperand(const std::string &token);
@@ -52,6 +50,18 @@ unsigned short getPrecedence(const std::string &token);
  * of the queue represents either an operand or an operator.
  */
 Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex);
+
+BinaryTree* toExpressionTree(Queue postfix);
+
+double evalUnaryOperator(const std::string &op, double argument, std::string &error);
+
+double evalBinaryOperator(const std::string &op, double left, double right, std::string &error);
+
+double evalUnaryFunction(const std::string &function, double argument, std::string &error);
+
+double evalBinaryFunction(const std::string &function, double left, double right, std::string &error);
+
+double evalExpressionTree(BinaryTree* tree, std::string &error);
 
 /**
  * Substitutes a group of variables in an expression with a group of values.
@@ -88,94 +98,6 @@ Queue substitute(Queue expression, const std::string* variables, const double* v
  * @return A new expression where the variables have been substituted.
  */
 char* substitute(const char* expression, const std::string* variables, const double* values, uint32_t count);
-
-/**
- * Evaluates a postfix expression.
- *
- * If the postfix expression contains variables (i.e. non-numeric operands), they are automatically
- * replaced with the default value, 0.
- *
- * @param postfix The postfix expression to evaluate, as a queue of operands and operators.
- *
- * @return The result of the postfix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalPostfix(Queue postfix);
-/**
- * Evaluates a postfix expression.
- *
- * If the postfix expression contains variables (i.e. non-numeric operands), they are automatically
- * replaced with the default value, 0.
- *
- * @param postfix The postfix expression to evaluate, as an array of characters which contains
- * operands and operators separated by space.
- *
- * @return The result of the postfix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalPostfix(const char* postfix);
-/**
- * Evaluates a postfix expression, and substitutes a group of variables with a group of values.
- *
- * If the postfix expression contains variables (i.e. non-numeric operands) that cannot be substituted
- * (i.e. they do not exist in the array of variables), they are automatically replaced with the
- * default value, 0.
- *
- * @param postfix The postfix expression to evaluate, as a queue of operands and operators.
- * @param variables The variables to substitute.
- * @param values The values with which to substitute the variables.
- * @param count The number of elements the variables array contains.
- *
- * @return The result of the postfix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalPostfix(Queue postfix, const std::string* variables, const double* values, uint32_t count);
-/**
- * Evaluates a postfix expression, and substitutes a group of variables with a group of values.
- *
- * If the postfix expression contains variables (i.e. non-numeric operands) that cannot be substituted
- * (i.e. they do not exist in the array of variables), they are automatically replaced with the
- * default value, 0.
- *
- * @param postfix The postfix expression to evaluate, as an array of characters which contains
- * operands and operators separated by space.
- * @param variables The variables to substitute.
- * @param values The values with which to substitute the variables.
- * @param count The number of elements the variables array contains.
- *
- * @return The result of the postfix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalPostfix(const char* postfix, const std::string* variables, const double* values, uint32_t count);
-
-/**
- * Evaluates an infix expression.
- *
- * If the infix expression contains variables (i.e. non-numeric operands), they are automatically
- * replaced with the default value, 0.
- *
- * @param infix The infix expression to evaluate, as an array of characters.
- *
- * @return The result of the infix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalInfix(const char* infix);
-/**
- * Evaluates an infix expression, and substitutes a group of variables with a group of values.
- *
- * If the infix expression contains variables (i.e. non-numeric operands) that cannot be substituted
- * (i.e. they do not exist in the array of variables), they are automatically replaced with the
- * default value, 0.
- *
- * @param infix The infix expression to evaluate, as an array of characters.
- * @param variables The variables to substitute.
- * @param values The values with which to substitute the variables.
- * @param count The number of elements the variables array contains.
- *
- * @return The result of the infix expression, if it is valid. Otherwise, the last element of
- * the expression stack.
- */
-double evalInfix(const char* infix, const std::string* variables, const double* values, uint32_t count);
 
 /**
  * Serializes a postfix expression, stored as a queue of operands and operators.

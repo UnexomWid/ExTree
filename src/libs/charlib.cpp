@@ -5,6 +5,16 @@ std::string toString(const char token) {
     return string;
 }
 
+std::string toString(double token) {
+    char* buffer = (char*) malloc(256);
+    sprintf(buffer, "%.10g", token);
+
+    std::string string(buffer);
+    free(buffer);
+
+    return string;
+}
+
 std::string toLower(const std::string &token) {
     std::string lower;
     lower.reserve(token.length());
