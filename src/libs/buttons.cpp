@@ -251,7 +251,7 @@ void readInput()
 
         std::cout<< '^';
     } else {
-        std::cout << "\nPostfix: " << serializePostfix(expression);
+        std::cout << "\nPostfix: " << postfixToString(expression);
         std::cout << "\nTree BFS: ";
 
         BinaryTree* tree = toExpressionTree(expression);

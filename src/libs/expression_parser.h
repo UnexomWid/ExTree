@@ -21,6 +21,7 @@
 #include "stack.h"
 #include "charlib.h"
 #include "tree_stack.h"
+#include "definitions.h"
 
 bool isOperator(const std::string &token);
 
@@ -38,17 +39,12 @@ bool isUnaryOperator(const std::string &token);
 
 bool isBinaryOperator(const std::string &token);
 
+bool isInteger(double value);
+
+double getConstantValue(const std::string &token);
+
 unsigned short getPrecedence(const std::string &token);
 
-
-/**
- * Converts an expression from infix notation to postfix notation.
- *
- * @param infix The infix notation of the expression.
- *
- * @return The postfix notation of the expression, as a queue. Each element
- * of the queue represents either an operand or an operator.
- */
 Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex);
 
 BinaryTree* toExpressionTree(Queue postfix);
@@ -63,53 +59,11 @@ double evalBinaryFunction(const std::string &function, double left, double right
 
 double evalExpressionTree(BinaryTree* tree, std::string &error);
 
-/**
- * Substitutes a group of variables in an expression with a group of values.
- *
- * If a a variable does not exist nt the expression, it will simply be ignored.
- * The arrays of variables and values have the same indices. That is, the first element
- * of the array of values corresponds to the first element of the array of variables. The
- * array of values must not contain less elements than the array of variables.
- *
- * @param expression The expression where to substitute the variables, as a queue of operands
- * and operators.
- * @param variables The variables to substitute.
- * @param values The values with which to substitute the variables.
- * @param count The number of elements the variables array contains.
- *
- * @return A new expression where the variables have been substituted, as a queue of operands
- * and operators.
- */
-Queue substitute(Queue expression, const std::string* variables, const double* values, uint32_t count);
+void substitute(BinaryTree* &tree, const std::string &variable, double value);
 
-/**
- * Substitutes a group of variables in an expression with a group of values.
- *
- * If a a variable does not exist nt the expression, it will simply be ignored.
- * The arrays of variables and values have the same indices. That is, the first element
- * of the array of values corresponds to the first element of the array of variables. The
- * array of values must not contain less elements than the array of variables.
- *
- * @param expression The expression where to substitute the variables.
- * @param variables The variables to substitute.
- * @param values The values with which to substitute the variables.
- * @param count The number of elements the variables array contains.
- *
- * @return A new expression where the variables have been substituted.
- */
-char* substitute(const char* expression, const std::string* variables, const double* values, uint32_t count);
+void substituteConstants(BinaryTree* &tree);
 
-/**
- * Serializes a postfix expression, stored as a queue of operands and operators.
- *
- * The queue of operands and operators is converted to an array of characters, which contains
- * the operands and operators separated by space, and represents the same postfix expression.
- *
- * @param postfix The postfix expression.
- *
- * @return The serialized postfix expression, if the queue is not empty. Otherwise, nullptr.
- */
-char* serializePostfix(Queue postfix);
+char* postfixToString(Queue postfix);
 
 /**
  * Deserializes a postfix expression, stored as an array of characters which contains
@@ -122,6 +76,6 @@ char* serializePostfix(Queue postfix);
  *
  * @return The deserialized postfix expression.
  */
-Queue deserializePostfix(const char* infix);
+Queue postfixFromString(const char* infix);
 
 #endif // EXPRESSION_PARSER_H_INCLUDED

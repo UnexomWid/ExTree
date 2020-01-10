@@ -75,33 +75,6 @@ bool isOperand(const std::string &token) {
                                !isNullOrWhitespace(token));
 }
 
-unsigned short getPrecedence(const std::string &token) {
-    std::string lowerToken = toLower(token);
-
-    if(lowerToken == "neg")
-        return 1;
-    if(lowerToken == "*" || lowerToken == "/")
-        return 2;
-    if(lowerToken == "\\")
-        return 3;
-    if(lowerToken == "+" || lowerToken == "-")
-        return 4;
-    if(lowerToken == "mod")
-        return 5;
-    if(lowerToken == "=" || lowerToken == "<>" || lowerToken == "<" || lowerToken == "<=" || lowerToken == ">" || lowerToken == ">=")
-        return 6;
-    if(lowerToken == "not")
-        return 7;
-    if(lowerToken == "and")
-        return 8;
-    if(lowerToken == "or")
-        return 9;
-    if(lowerToken == "xor")
-        return 10;
-
-    return 0;
-}
-
 bool isUnaryFunction(const std::string &token) {
     std::string lowerToken = toLower(token);
 
@@ -163,8 +136,49 @@ bool isBinaryOperator(const std::string &token) {
             lowerToken == "xor" );
 }
 
-bool isInteger(double number) {
-    return trunc(number) == number;
+bool isInteger(double value) {
+    return floor(value) == value;
+}
+
+unsigned short getPrecedence(const std::string &token) {
+    std::string lowerToken = toLower(token);
+
+    if(lowerToken == "neg")
+        return 1;
+    if(lowerToken == "*" || lowerToken == "/")
+        return 2;
+    if(lowerToken == "\\")
+        return 3;
+    if(lowerToken == "+" || lowerToken == "-")
+        return 4;
+    if(lowerToken == "mod")
+        return 5;
+    if(lowerToken == "=" || lowerToken == "<>" || lowerToken == "<" || lowerToken == "<=" || lowerToken == ">" || lowerToken == ">=")
+        return 6;
+    if(lowerToken == "not")
+        return 7;
+    if(lowerToken == "and")
+        return 8;
+    if(lowerToken == "or")
+        return 9;
+    if(lowerToken == "xor")
+        return 10;
+
+    return 0;
+}
+
+double getConstantValue(const std::string &token) {
+    std::string lowerToken = toLower(token);
+
+    if(token == "true")
+        return TRUE;
+    if(token == "false")
+        return FALSE;
+    if(token == "pi")
+        return PI;
+    if(token == "e")
+        return E;
+    return 0;
 }
 
 BinaryTree* toExpressionTree(Queue postfix) {
@@ -573,6 +587,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
     Stack stack;
     // TODO: Fix variable naming.
     bool previousIsOperand = false;
+    bool atStartOfExpression = true;
     uint32_t length = strlen(infix);
 
     for(uint32_t i = 0; i < length; ++i) {
@@ -614,6 +629,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             queue.push(num);
 
             previousIsOperand = true;
+            atStartOfExpression = false;
             continue;
         }
 
@@ -776,6 +792,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
                 queue.push(token); // Push the function itself.
                 previousIsOperand = true;
+                atStartOfExpression = false;
                 ++i;
             } else {
                 std::string token(start, start + count);
@@ -784,9 +801,9 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                     // Operator.
 
                     if(!previousIsOperand) {
-                        if(token == "+") {
+                        if(token == "+" && atStartOfExpression) {
                             continue;
-                        } else if(token == "-") {
+                        } else if(token == "-" && atStartOfExpression) {
                             token = "neg";
                         } else {
                             Queue emptyQueue;
@@ -809,6 +826,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                     stack.push(token);
 
                     previousIsOperand = false;
+                    atStartOfExpression = false;
                 } else {
                     // Variable.
 
@@ -822,6 +840,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
                     queue.push(token);
                     previousIsOperand = true;
+                    atStartOfExpression = false;
                 }
             }
             continue;
@@ -837,6 +856,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             }
 
             stack.push(toString(current));
+            atStartOfExpression = true;
             continue;
         }
 
@@ -853,6 +873,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                 stack.pop();
 
             previousIsOperand = true;
+            atStartOfExpression = false;
             continue;
         }
 
@@ -873,9 +894,9 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
         if(isOperator(token)) {
             if(!previousIsOperand) {
-                if(token == "+") {
+                if(token == "+" && atStartOfExpression) {
                     continue;
-                } else if(token == "-") {
+                } else if(token == "-" && atStartOfExpression) {
                     token = "neg";
                 } else {
                     Queue emptyQueue;
@@ -898,6 +919,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             stack.push(token);
 
             previousIsOperand = false;
+            atStartOfExpression = false;
         } else {
             Queue emptyQueue;
             error = "Unknown operator '" + token + "'";
@@ -923,59 +945,29 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
     return queue;
 }
 
-Queue substitute(Queue expression, const std::string* variables, const double* values, uint32_t count) {
-    Queue sub;
+void substitute(BinaryTree* &tree, const std::string &variable, double value) {
+    if(tree == nullptr)
+        return;
 
-    std::string stringValues[count];
+    if(tree->data == variable)
+        tree->data = toString(value);
 
-    for(uint32_t i = 0; i < count; ++i)
-        stringValues[i] = toString(values[i] > 0 ? values[i] : -1 * values[i]);
-
-    while(!expression.empty()) {
-        std::string token = expression.front();
-
-        uint32_t i;
-        for(i = 0; i < count; ++i) {
-            if(token == variables[i]) {
-                sub.push(stringValues[i]);
-                if(values[i] < 0)
-                    sub.push("neg");
-                break;
-            }
-        }
-
-        if(i == count)
-            sub.push(token);
-
-        expression.pop();
-    }
-
-    return sub;
+    substitute(tree->left, variable, value);
+    substitute(tree->right, variable, value);
 }
 
-char* substitute(const char* expression, const std::string* variables, const double* values, const uint32_t count) {
-    std::string sub(expression);
+void substituteConstants(BinaryTree* &tree) {
+    if(tree == nullptr)
+        return;
 
-    sub.reserve(sub.size() > 128 ? 2 * sub.size() : 256); // To minimize the amount of re-allocations.
+    if(isConstant(tree->data))
+        tree->data = toString(getConstantValue(tree->data));
 
-    for(uint32_t i = 0; i < count; ++i) {
-        std::string value = toString(values[i]);
-        size_t pos = sub.find(variables[i]);
-
-        while (pos != std::string::npos) {
-            sub.replace(pos, (variables[i]).size(), value);
-            pos = sub.find(variables[i], pos + value.size());
-        }
-    }
-
-    sub.reserve(sub.size()); // Bring back the capacity to the actual size.
-
-    char* c = (char*) malloc((sub.size() + 1) * sizeof(char));
-    strcpy(c, sub.c_str());
-    return c;
+    substituteConstants(tree->left);
+    substituteConstants(tree->right);
 }
 
-char* serializePostfix(Queue postfix) {
+char* postfixToString(Queue postfix) {
     postfix = postfix.copy();
 
     if(postfix.empty())
@@ -999,7 +991,7 @@ char* serializePostfix(Queue postfix) {
     return c;
 }
 
-Queue deserializePostfix(const char* infix) {
+Queue postfixFromString(const char* infix) {
     Queue deserialized;
 
     char *tokens = (char*) malloc((strlen(infix) + 1) * sizeof(char));
