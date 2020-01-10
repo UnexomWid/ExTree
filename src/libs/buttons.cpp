@@ -24,9 +24,8 @@ buttonSettings newExp[4];
 
 bool isInitialized = false;
 bool isButtonSettingsDeclared = false;
-//bool linkPressed = false;
 
-int var1,var2;          // DECLARAREA VARIABILELOR PROVIZORII ---------------------
+BinaryTree* expressionTree;
 
 void defineButtonSettings()
 {
@@ -235,6 +234,7 @@ void readInput()
 {
     char s[256];
     std::cout << ">> ";
+    std::cin.clear();
     std::cin.getline(s, 256);
 
     std::string error;
@@ -277,12 +277,8 @@ void readInput()
             std::cout << "\n\nResult: " << result;
         }
     }
-
-    std::cout << "\n\nType anything to open the window...";
-
-    char x;
-    std::cin>>x; // Dummy operation to pause.
-    // Apparently, getch() from <conio.h> bugs the window.
+    Log("\n");
+    system("pause");
 }
 
 void initializeWindow(THEME theme)
@@ -315,8 +311,6 @@ void initializeWindow(THEME theme)
 
             // Sets the line settings.
             setlinestyle(SOLID_LINE,0,1);
-
-            circle(var1,var2,10);                   // AICI DESENEAZA UN CERC ---------------- DOAR PE ACEASTA TEMA ESTE IMPLEMENTAT.
 
             drawAll();
             break;
@@ -361,6 +355,7 @@ void runProgram()
     while(button != QUIT)
     {
         getmouseclick(WM_LBUTTONDOWN,mouseX,mouseY);
+        // moveTree(); --------------------------------------------------------------------DE IMPLEMENTAT
         if(isAnimEvalPressed(mouseX,mouseY) && button != ANIM_EVAL)
         {
             // Call AnimEval();
@@ -436,6 +431,7 @@ void drawAll(LANGUAGE lng)
     getlinesettings(&lineInfo);
 
     drawSquares();
+    drawTree();
     drawNewExp();
     drawTitle();
     drawAnimEval();
@@ -445,11 +441,50 @@ void drawAll(LANGUAGE lng)
     drawQuit();
 }
 
+void drawTree()
+{
+    setfillstyle(SOLID_FILL,getbkcolor());
+    bar(0,65,1260,HEIGHT);
+    settextstyle(textInfo.font,textInfo.direction,2);
+//    char* t = "Testul";
+//    char* t1 = "Test2";
+//    char* t2 = "Un test mult mai lung";
+//    int var = textwidth(t);
+//    int var1 = textwidth(t1);
+//    int var2 = textwidth(t2);
+//    rectangle(600 - var/2,100, 610+ var/2,130);
+//    outtextxy(600 - var/2 + 5, 105, t);
+//    line(600,130,610 + var/2,150);
+
+
+    //drawNode(expressionTree, 0,600);
+}
+void drawNode(BinaryTree* tree, int contor, int topCenter)
+{
+    if(tree == nullptr) return;
+    int w;
+    char * temp;
+    strcpy(temp, tree->data.c_str());
+    w = textwidth(temp);
+
+    rectangle(topCenter,100 + contor*50,topCenter + 10 + w, 130 + contor*50);
+    outtextxy(topCenter + 5, 105 + contor*50, temp);
+    line()
+
+    if(temp == "neg")
+    {
+
+    }
+    else
+    {
+
+    }
+}
+
 void drawNewExp()
 {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(0,0,420,60);
-
     line(0,60,420,60);
     line(420,60,420,0);
     settextstyle(textInfo.font,textInfo.direction,5);

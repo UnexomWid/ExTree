@@ -4,6 +4,7 @@
 #include <queue>    // TEMPORARY! For testing purposes only.
 #include <graphics.h>
 #include <iostream> // Necesar pentru Log() din sectiunea de functii ajutatoare.
+#include <windows.h>
 
 #include "tree.h"
 #include "queue.h"
@@ -21,6 +22,9 @@ const int WIDTH = getmaxwidth();
 extern struct textsettingstype textInfo;
 extern struct linesettingstype lineInfo;
 extern struct fillsettingstype fillInfo;
+
+/// Extern binary tree.
+extern BinaryTree* expressionTree;
 
 /// A struct containing the information about each button, based on the selected language.
 struct buttonSettings{
@@ -97,6 +101,9 @@ void drawAll(LANGUAGE lng = EN);
 
 /// Draws the new expression button.
 void drawNewExp();
+
+/// Draws the tree.
+void drawTree();
 
 /// Draws the title.
 void drawTitle();
