@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    //readInput();
+    readInput();
 
     initializeWindow();
 

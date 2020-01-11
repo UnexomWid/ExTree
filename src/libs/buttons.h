@@ -1,8 +1,8 @@
 #ifndef BUTTONS_H_INCLUDED
 #define BUTTONS_H_INCLUDED
 
-#include <queue>    // TEMPORARY! For testing purposes only.
 #include <graphics.h>
+#include <stdarg.h> // For the Log() function.
 #include <iostream> // Necesar pentru Log() din sectiunea de functii ajutatoare.
 #include <windows.h>
 
@@ -139,7 +139,7 @@ void About();
 /// Helper functions.
 /// ----------------------------------------------------------------
 
-void Log(char* message);
+void Log(const char* format, ...);
 
 /// Draws a line at a specific angle. The angle starts from 12 o'clock and goes clockwise.
 void angle(int x, int y, double a);

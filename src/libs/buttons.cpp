@@ -234,53 +234,31 @@ void defineButtonSettings()
 
 void readInput()
 {
+    read_input:
+
     char s[256];
-    std::cout << ">> ";
-    std::cin.clear();
+    Log(">> ");
     std::cin.getline(s, 256);
 
     std::string error;
-    unsigned int errorIndex = 0;
+    uint errorIndex = 0;
 
     Queue expression = toPostfix(s, error, errorIndex);
 
     if(!error.empty()) {
-        std::cout << "ERROR: " << error << " at index " << errorIndex << "\n\n";
-        std::cout << s << '\n';
+        Log("ERROR: %s at index + %u\n\n", error.c_str(), errorIndex);
+        Log("%s\n", s);
 
-        for(unsigned int i = 0; i < errorIndex; ++i)
-            std::cout << '_';
+        for(uint i = 0; i < errorIndex; ++i)
+            Log("_");
 
-        std::cout<< '^';
+        Log("^\n\n");
+
+        std::cin.clear();
+        goto read_input;
     } else {
-        std::cout << "\nPostfix: " << postfixToString(expression);
-        std::cout << "\nTree BFS: ";
-
-        BinaryTree* tree = toExpressionTree(expression);
-        std::queue<BinaryTree*> queue;
-
-        queue.push(tree);
-        while(!queue.empty()) {
-            std::cout << queue.front()->data << ' ';
-
-            if(queue.front()->left != nullptr)
-                queue.push(queue.front()->left);
-            if(queue.front()->right != nullptr)
-                queue.push(queue.front()->right);
-
-            queue.pop();
-        }
-
-        double result = evalExpressionTree(tree, error);
-
-        if(!error.empty()) {
-            std::cout << "\n\nERROR: " << error << "\n\n";
-        } else {
-            std::cout << "\n\nResult: " << result;
-        }
+        expressionTree = toExpressionTree(expression);
     }
-    Log("\n");
-    system("pause");
 }
 
 void initializeWindow(THEME theme)
@@ -684,10 +662,13 @@ void About()
 
 }
 
+void Log(const char* format, ...) {
+    va_list va;
+    va_start(va, format);
 
-void Log(char* message)
-{
-    std::cout<<message<<std::endl;
+    vprintf(format, va);
+
+    va_end(va);
 }
 
 void angle(int x, int y, double a)
