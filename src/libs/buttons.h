@@ -106,7 +106,7 @@ void drawNewExp();
 void drawTree();
 
 /// Draws a particular node.
-void drawNode(BinaryTree* tree, int x, int y);
+void drawNode(BinaryTree* tree, int x, int y, int lineSize);
 
 /// Draws the title.
 void drawTitle();
@@ -142,7 +142,7 @@ void About();
 void Log(const char* format, ...);
 
 /// Draws a line at a specific angle. The angle starts from 12 o'clock and goes clockwise.
-void angle(int x, int y, double a);
+void angle(int x, int y, double a, int &V, int &W, int lineSize);
 
 /// This reset the mouseX and mouseY to -1.
 void resetMouseClick();

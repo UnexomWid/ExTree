@@ -1,12 +1,14 @@
 #include "buttons.h"
 
-#define lineSize 30
-
 struct textsettingstype textInfo;
 struct linesettingstype lineInfo;
 struct fillsettingstype fillInfo;
 
 int mouseX, mouseY;
+
+double angleLeft = 4.5378;
+double angleRight = 1.7453;
+double angleDifference = 0.1745;
 
 BUTTONS button = NONE;
 LANGUAGE lng = EN;
@@ -427,31 +429,56 @@ void drawTree()
     bar(0,65,1260,HEIGHT);
     settextstyle(textInfo.font,textInfo.direction,2);
 
-    //drawNode(expressionTree, 0,600);
+    drawNode(expressionTree, 600,100, 200);
 }
-void drawNode(BinaryTree* tree, int x, int y)
+void drawNode(BinaryTree* tree, int x, int y, int lineSize)
 {
-    if(tree == nullptr) return;
+    if(tree == nullptr || tree == NULL) return;
 
     int textW;
-    char * temp;
+    char * temp = (char*) malloc(256 * sizeof(char));
 
     if(tree->data != "neg"){
         strcpy(temp, tree->data.c_str());
         textW = textwidth(temp);
     }
     else
-        temp = "-";
-
-
-    if(temp == "-")
     {
+        strcpy(temp,"-");
+        textW = textwidth("-");
+    }
 
+    int V,W;
+    if(strcmp(temp,"-") == 0)
+    {
+        rectangle(x - textW/2, y, x + textW/2 + 10, y + 30);
+        outtextxy(x - textW/2 + 5, y + 5, temp);
+        if(tree->left != nullptr)
+        {
+            angle(x,y+30,PI,V,W, 30);
+            drawNode(tree->left,V,W,lineSize);
+        }
     }
     else
     {
-
+        rectangle(x - textW/2, y, x + textW/2 + 10, y + 30);
+        outtextxy(x - textW/2 + 5, y + 5, temp);
+        if(tree->left != nullptr)
+        {
+            angle(x,y+30,angleLeft,V,W, lineSize);
+            angleLeft -= angleDifference;
+            drawNode(tree->left,V,W,lineSize * 9/10);
+            angleLeft +=angleDifference;
+        }
+        if(tree->right != nullptr)
+        {
+            angle(x,y+30,angleRight,V,W, lineSize);
+            angleRight += angleDifference;
+            drawNode(tree->right,V,W,lineSize * 9/10 );
+            angleRight -=angleDifference;
+        }
     }
+    free(temp);
 }
 
 void drawNewExp()
@@ -671,13 +698,15 @@ void Log(const char* format, ...) {
     va_end(va);
 }
 
-void angle(int x, int y, double a)
+void angle(int x, int y, double a, int &V, int &W, int lineSize)
 {
     int v;
     int w;
     v = sin(a) * lineSize;
-    w = -cos(a) * lineSize;
+    w = (-1) * cos(a) * lineSize;
     line(x, y, x+v, y+w);
+    V = v + x;
+    W = w + y;
 }
 
 void resetMouseClick()
