@@ -12,7 +12,6 @@
 
 #include <cmath>
 #include <string>
-#include <cstdint>
 #include <cstring>
 
 #include "node.h"
@@ -41,41 +40,40 @@ bool isBinaryOperator(const std::string &token);
 
 bool isInteger(double value);
 
+/// Returns the value of a constant.
 double getConstantValue(const std::string &token);
 
-unsigned short getPrecedence(const std::string &token);
+/// Returns the precedence value of an operator. Lower values mean higher priority.
+ushort getOperatorPrecedence(const std::string &token);
 
-Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex);
+/// Converts an infix expression to postfix. Any errors are stored in the 'error' parameter.
+Queue toPostfix(const char* infix, std::string &error, uint &errorIndex);
 
+/// Converts a postfix expression to a binary expression tree.
 BinaryTree* toExpressionTree(Queue postfix);
 
+/// Evaluates an unary operator. Any errors are stored in the 'error' parameter.
 double evalUnaryOperator(const std::string &op, double argument, std::string &error);
 
+/// Evaluates a binary operator. Any errors are stored in the 'error' parameter.
 double evalBinaryOperator(const std::string &op, double left, double right, std::string &error);
 
+/// Evaluates an unary function. Any errors are stored in the 'error' parameter.
 double evalUnaryFunction(const std::string &function, double argument, std::string &error);
 
+/// Evaluates a binary function. Any errors are stored in the 'error' parameter.
 double evalBinaryFunction(const std::string &function, double left, double right, std::string &error);
 
+/// Evaluates a binary expression tree. Any errors are stored in the 'error' parameter.
 double evalExpressionTree(BinaryTree* tree, std::string &error);
 
+/// Substitutes a variable with a value in an expression tree.
 void substitute(BinaryTree* &tree, const std::string &variable, double value);
 
+/// Substitutes all constants with their values in an expression tree.
 void substituteConstants(BinaryTree* &tree);
 
+/// Converts a postfix expression stored in a Queue to a string.
 char* postfixToString(Queue postfix);
-
-/**
- * Deserializes a postfix expression, stored as an array of characters which contains
- * operands and operators separated by space.
- *
- * The array of characters is converted to queue of operands and operators which
- * and represents the same postfix expression.
- *
- * @param postfix The postfix expression.
- *
- * @return The deserialized postfix expression.
- */
-Queue postfixFromString(const char* infix);
 
 #endif // EXPRESSION_PARSER_H_INCLUDED

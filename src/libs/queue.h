@@ -2,16 +2,18 @@
 #define QUEUE_H_INCLUDED
 
 #include "node.h"
+#include "definitions.h"
 
-struct Queue{
-    /// Pointer to the oldest added element.
-    Node* first;        //la fel ca L.prim
+/// Represents a queue of strings.
+struct Queue {
+    /// The pointer to the oldest element.
+    Node* first;
 
-    /// Pointer to the last element added.
-    Node* last;         //La fel ca L.ultim
+    /// The pointer to the newest element.
+    Node* last;
 
-    /// The length of the queue.
-    unsigned int size;
+    /// The size of the queue.
+    uint size;
 
     /// Default constructor.
     Queue();
@@ -25,7 +27,7 @@ struct Queue{
     /// Returns the oldest element from the queue.
     std::string front();
 
-    /// Returns whether the queue is empty or not.
+    /// Returns whether or not the queue is empty.
     bool empty();
 
     /// Returns a copy of the queue.

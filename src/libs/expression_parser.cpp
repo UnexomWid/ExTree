@@ -70,9 +70,10 @@ bool isConstant(const std::string &token) {
 }
 
 bool isOperand(const std::string &token) {
-    return isNumber(token) || (!isOperator(token) &&
-                               !isFunction(token) &&
-                               !isNullOrWhitespace(token));
+    return isNumber(token)   ||
+         (!isOperator(token) &&
+          !isFunction(token) &&
+          !isNullOrWhitespace(token));
 }
 
 bool isUnaryFunction(const std::string &token) {
@@ -140,27 +141,43 @@ bool isInteger(double value) {
     return floor(value) == value;
 }
 
-unsigned short getPrecedence(const std::string &token) {
+ushort getOperatorPrecedence(const std::string &token) {
     std::string lowerToken = toLower(token);
 
     if(lowerToken == "neg")
         return 1;
-    if(lowerToken == "*" || lowerToken == "/")
+
+    if(lowerToken == "*" ||
+       lowerToken == "/" )
         return 2;
+
     if(lowerToken == "\\")
         return 3;
-    if(lowerToken == "+" || lowerToken == "-")
+
+    if(lowerToken == "+" ||
+       lowerToken == "-" )
         return 4;
+
     if(lowerToken == "mod")
         return 5;
-    if(lowerToken == "=" || lowerToken == "<>" || lowerToken == "<" || lowerToken == "<=" || lowerToken == ">" || lowerToken == ">=")
+
+    if(lowerToken == "="  ||
+       lowerToken == "<>" ||
+       lowerToken == "<"  ||
+       lowerToken == "<=" ||
+       lowerToken == ">"  ||
+       lowerToken == ">=" )
         return 6;
+
     if(lowerToken == "not")
         return 7;
+
     if(lowerToken == "and")
         return 8;
+
     if(lowerToken == "or")
         return 9;
+
     if(lowerToken == "xor")
         return 10;
 
@@ -193,9 +210,6 @@ BinaryTree* toExpressionTree(Queue postfix) {
             BinaryTree* tree = new BinaryTree;
 
             if(isUnaryOperator(token)) {
-                /* if(token == "neg") {
-                 *    tree->data = "-";
-                 * } else tree->data = token;*/
                 tree->data = token;
 
                 tree->left = stack.top();
@@ -582,15 +596,16 @@ double evalExpressionTree(BinaryTree* tree, std::string &error) {
     return 0;
 }
 
-Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex) {
+Queue toPostfix(const char* infix, std::string &error, uint &errorIndex) {
     Queue queue;
     Stack stack;
-    // TODO: Fix variable naming.
-    bool previousIsOperand = false;
-    bool atStartOfExpression = true;
-    uint32_t length = strlen(infix);
 
-    for(uint32_t i = 0; i < length; ++i) {
+    bool previousIsOperand = false;
+    bool previousIsOperator = false;
+
+    uint length = strlen(infix);
+
+    for(uint i = 0; i < length; ++i) {
         char current = infix[i];
 
         if(isSpace(current))
@@ -598,15 +613,14 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
         if(isDigit(current)) {
             if(previousIsOperand) {
-                Queue emptyQueue;
                 error = "Expected operator (found operand)";
                 errorIndex = i;
 
-                return emptyQueue;
+                RETURN_EMPTY_QUEUE
             }
 
             const char* start = infix + i;
-            uint32_t count = 1;
+            uint count = 1;
             bool decimalSeparatorAppeared = false;
 
             while(i + 1 < length && (isDigit(infix[i + 1]) ||
@@ -614,11 +628,10 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
                 if(isDecimalSeparator(infix[i + 1])) {
                     if(decimalSeparatorAppeared) {
-                        Queue emptyQueue;
                         error = "Unexpected decimal separator";
                         errorIndex = i - count + 1;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     } else decimalSeparatorAppeared = true;
                 }
                 ++count;
@@ -629,13 +642,13 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             queue.push(num);
 
             previousIsOperand = true;
-            atStartOfExpression = false;
+            previousIsOperator = false;
             continue;
         }
 
         if(isAlpha(current)) {
             const char* start = infix + i;
-            uint32_t count = 1;
+            uint count = 1;
 
             while(i + 1 < length && (isAlpha(infix[i + 1])  ||
                                      isDigit(infix[i + 1]))) {
@@ -644,23 +657,24 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             }
 
             if(i + 1 < length && isLeftSeparator(infix[i + 1])) {
+                // --------------------------------------------------
                 // Function.
+                // --------------------------------------------------
 
                 std::string token(start, start + count);
 
                 if(!isFunction(token)) {
-                    Queue emptyQueue;
                     error = "Unknown function '" + token + "'";
                     errorIndex = i - count + 1;
 
-                    return emptyQueue;
+                    RETURN_EMPTY_QUEUE
                 }
 
                 ++i;
                 start = infix + i + 1;
                 count = 0;
 
-                uint16_t openSeparatorCount = 1;
+                ushort openSeparatorCount = 1;
 
                 while(i + 1 < length) {
                     if(isLeftSeparator(infix[i + 1]))
@@ -679,49 +693,44 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                 }
 
                 if(i + 1 >= length) {
-                    Queue emptyQueue;
                     error = "Expected end of function argument";
                     errorIndex = i;
 
-                    return emptyQueue;
+                    RETURN_EMPTY_QUEUE
                 }
 
                 if(isArgumentSeparator(infix[i + 1]) && openSeparatorCount > 1) {
-                    Queue emptyQueue;
                     error = "Expected right separator at end of function argument (did you miss a ')' ?)";
                     errorIndex = i + 1;
 
-                    return emptyQueue;
+                    RETURN_EMPTY_QUEUE
                 }
 
                 if(!isUnaryFunction(token)) {
                     if (!isArgumentSeparator(infix[i + 1])) {
-                        Queue emptyQueue;
                         error = "Expected two function arguments";
                         errorIndex = i + 1;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     }
                 }
 
                 if(!isBinaryFunction(token)) {
                     if (isArgumentSeparator(infix[i + 1])) {
-                        Queue emptyQueue;
                         error = "Expected only one function argument";
                         errorIndex = i + 1;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     }
                 }
 
                 std::string argExpression(start, start + count);
 
                 if(isNullOrWhitespace(argExpression)) {
-                    Queue emptyQueue;
                     error = "Unexpected empty function argument";
                     errorIndex = i - count + 1;
 
-                    return emptyQueue;
+                    RETURN_EMPTY_QUEUE
                 }
 
                 Queue argPostfix = toPostfix(argExpression.c_str(), error, errorIndex);
@@ -755,21 +764,19 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                     }
 
                     if(i + 1 >= length) {
-                        Queue emptyQueue;
                         error = "Expected end of function argument";
                         errorIndex = i;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     }
 
                     argExpression.assign(start, count);
 
                     if(isNullOrWhitespace(argExpression)) {
-                        Queue emptyQueue;
                         error = "Unexpected empty function argument";
                         errorIndex = i - count + 1;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     }
 
                     argPostfix = toPostfix(argExpression.c_str(), error, errorIndex);
@@ -778,7 +785,7 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                         error = "Expected non-empty argument";
                         errorIndex = i - count + 1;
 
-                        return argPostfix;
+                        RETURN_EMPTY_QUEUE
                     }
 
                     while(!argPostfix.empty()) {
@@ -790,34 +797,37 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                         token += "_u";
                 }
 
-                queue.push(token); // Push the function itself.
+                queue.push(token);
+
                 previousIsOperand = true;
-                atStartOfExpression = false;
+                previousIsOperator = false;
+
                 ++i;
             } else {
                 std::string token(start, start + count);
 
                 if(isOperator(token)) {
+                    // --------------------------------------------------
                     // Operator.
+                    // --------------------------------------------------
 
                     if(!previousIsOperand) {
-                        if(token == "+" && atStartOfExpression) {
+                        if(token == "+" && !previousIsOperator) {
                             continue;
-                        } else if(token == "-" && atStartOfExpression) {
+                        } else if(token == "-" && !previousIsOperator) {
                             token = "neg";
                         } else {
-                            Queue emptyQueue;
                             error = "Expected operand after operator";
                             errorIndex = i - count + 1;
 
-                            return emptyQueue;
+                            RETURN_EMPTY_QUEUE
                         }
                     }
 
-                    uint8_t precedence = getPrecedence(token);
+                    uchar precedence = getOperatorPrecedence(token);
                     while(!stack.empty() &&
                           !isLeftSeparator(stack.top().at(0)) &&
-                          getPrecedence(stack.top()) <= precedence) {
+                           getOperatorPrecedence(stack.top()) <= precedence) {
 
                         queue.push(stack.top());
                         stack.pop();
@@ -826,21 +836,22 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                     stack.push(token);
 
                     previousIsOperand = false;
-                    atStartOfExpression = false;
+                    previousIsOperator = true;
                 } else {
+                    // --------------------------------------------------
                     // Variable.
+                    // --------------------------------------------------
 
                     if(previousIsOperand) {
-                        Queue emptyQueue;
                         error = "Expected operand after operator";
                         errorIndex = i - count + 1;
 
-                        return emptyQueue;
+                        RETURN_EMPTY_QUEUE
                     }
 
                     queue.push(token);
                     previousIsOperand = true;
-                    atStartOfExpression = false;
+                    previousIsOperator = false;
                 }
             }
             continue;
@@ -848,15 +859,14 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
         if(isLeftSeparator(current)) {
             if(previousIsOperand) {
-                Queue emptyQueue;
                 error = "Expected operator before index (found operand)";
                 errorIndex = i;
 
-                return emptyQueue;
+                RETURN_EMPTY_QUEUE
             }
 
             stack.push(toString(current));
-            atStartOfExpression = true;
+            previousIsOperator = false;
             continue;
         }
 
@@ -873,14 +883,16 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
                 stack.pop();
 
             previousIsOperand = true;
-            atStartOfExpression = false;
+            previousIsOperator = false;
             continue;
         }
 
+        // --------------------------------------------------
         // Operator.
+        // --------------------------------------------------
 
         const char* start = infix + i;
-        uint32_t count = 1;
+        uint count = 1;
 
         while(i + 1 < length && !isDigit(infix[i + 1]) &&
                                 !isAlpha(infix[i + 1]) &&
@@ -894,23 +906,22 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
 
         if(isOperator(token)) {
             if(!previousIsOperand) {
-                if(token == "+" && atStartOfExpression) {
+                if(token == "+" && !previousIsOperator) {
                     continue;
-                } else if(token == "-" && atStartOfExpression) {
+                } else if(token == "-" && !previousIsOperator) {
                     token = "neg";
                 } else {
-                    Queue emptyQueue;
                     error = "Expected operand after operator";
                     errorIndex = i - count + 1;
 
-                    return emptyQueue;
+                    RETURN_EMPTY_QUEUE
                 }
             }
 
-            uint8_t precedence = getPrecedence(token);
+            uchar precedence = getOperatorPrecedence(token);
             while(!stack.empty() &&
                   !isLeftSeparator(stack.top().at(0)) &&
-                  getPrecedence(stack.top()) <= precedence) {
+                   getOperatorPrecedence(stack.top()) <= precedence) {
 
                 queue.push(stack.top());
                 stack.pop();
@@ -919,22 +930,20 @@ Queue toPostfix(const char* infix, std::string &error, unsigned int &errorIndex)
             stack.push(token);
 
             previousIsOperand = false;
-            atStartOfExpression = false;
+            previousIsOperator = true;
         } else {
-            Queue emptyQueue;
             error = "Unknown operator '" + token + "'";
             errorIndex = i - count + 1;
 
-            return emptyQueue;
+            RETURN_EMPTY_QUEUE
         }
     }
 
     if(!previousIsOperand) {
-        Queue emptyQueue;
         error = "Expected operand after operator";
         errorIndex = length - 1;
 
-        return emptyQueue;
+        RETURN_EMPTY_QUEUE
     }
 
     while(!stack.empty()) {
@@ -973,35 +982,21 @@ char* postfixToString(Queue postfix) {
     if(postfix.empty())
         return nullptr;
 
-    std::string serialized;
-    serialized.reserve(postfix.size * 3); // To minimize the amount of re-allocations.
+    std::string string;
+    string.reserve(postfix.size * 3);
 
-    serialized += postfix.front();
+    string += postfix.front();
     postfix.pop();
 
     while(!postfix.empty()) {
-        serialized += " " + postfix.front();
+        string += " " + postfix.front();
         postfix.pop();
     }
 
-    serialized.reserve(serialized.size()); // Bring back the capacity to the actual size.
+    // Bring the capacity to the actual size, in order to not waste memory.
+    string.reserve(string.size());
 
-    char* c = (char*) malloc((serialized.size() + 1) * sizeof(char));
-    strcpy(c, serialized.c_str());
+    char* c = (char*) malloc((string.size() + 1) * sizeof(char));
+    strcpy(c, string.c_str());
     return c;
-}
-
-Queue postfixFromString(const char* infix) {
-    Queue deserialized;
-
-    char *tokens = (char*) malloc((strlen(infix) + 1) * sizeof(char));
-    strcpy(tokens, infix);
-    char *token = strtok(tokens, " ");
-
-    while(token != nullptr) {
-        deserialized.push(token);
-        token = strtok(nullptr, " ");
-    }
-
-    return deserialized;
 }

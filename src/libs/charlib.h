@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "definitions.h"
+
 std::string toString(char token);
 
 std::string toString(double token);

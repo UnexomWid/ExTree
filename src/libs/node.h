@@ -3,12 +3,12 @@
 
 #include <string>
 
-/// Node definition.
+/// Represents a simple linked list node that stores a string.
 struct Node {
-    /// Holds information.
+    /// The string stored in this node.
     std::string data;
 
-    /// Pointer to the next node.
+    /// The pointer to the next node.
     Node* next;
 
     /// Default constructor.

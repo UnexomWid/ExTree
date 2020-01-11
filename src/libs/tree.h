@@ -3,30 +3,27 @@
 
 #include <string>
 
-/// Binary tree definition.
-struct BinaryTree{
-    /// This holds the information within the node.
+/// Represents a binary tree.
+struct BinaryTree {
+    /// The string stored in this tree node.
     std::string data;
 
-    /// Pointer to the left child.
+    /// The pointer to the left subtree.
     BinaryTree* left;
 
-    /// Pointer to the right child.
+    /// The pointer to the right subtree.
     BinaryTree* right;
-
-    ///Pointer to parent.
-    BinaryTree* parent;
 
     /// Default constructor.
     BinaryTree();
 };
 
-/// Tree node definition (holds a binary tree as data).
+/// Represents a simple linked list node that stores a binary tree.
 struct TreeNode {
-    /// Holds information.
+    /// The binary tree stored in this node.
     BinaryTree* data;
 
-    /// Pointer to the next node.
+    /// The pointer to the next node.
     TreeNode* next;
 
     /// Default constructor.

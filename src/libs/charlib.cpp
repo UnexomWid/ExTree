@@ -6,8 +6,8 @@ std::string toString(const char token) {
 }
 
 std::string toString(double token) {
-    char* buffer = (char*) malloc(256);
-    sprintf(buffer, "%.10g", token);
+    char* buffer = (char*) malloc(256 * sizeof(char));
+    sprintf(buffer, DOUBLE_NUMBERS_FORMAT, token);
 
     std::string string(buffer);
     free(buffer);
@@ -19,8 +19,8 @@ std::string toLower(const std::string &token) {
     std::string lower;
     lower.reserve(token.length());
 
-    for(char i : token)
-        lower += i;
+    for(uint i = 0; i < token.size(); ++i)
+        lower += token.at(i);
     return lower;
 }
 
@@ -57,8 +57,8 @@ bool isArgumentSeparator(const char token) {
 }
 
 bool isNumber(const std::string &token) {
-    for(char c : token)
-        if(!isDigit(c) && !isArgumentSeparator(c))
+    for(uint i = 0; i < token.size(); ++i)
+        if(!isDigit(token.at(i)) && !isArgumentSeparator(token.at(i)))
             return false;
     return true;
 }
@@ -67,8 +67,8 @@ bool isNullOrWhitespace(const std::string &token) {
     if(token.empty())
         return true;
 
-    for(char i : token)
-        if(i != ' ' && i != '\0' && i != '\t')
+    for(uint i = 0; i < token.size(); ++i)
+        if(token.at(i) != ' ' && token.at(i) != '\0' && token.at(i) != '\t')
             return false;
 
     return true;
