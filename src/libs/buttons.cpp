@@ -6,12 +6,27 @@ struct fillsettingstype fillInfo;
 
 int mouseX, mouseY;
 
-double angleLeft = 4.5378;
-double angleRight = 1.7453;
+double angleStartLeft = 4.5378;
+double angleStartRight = 1.7453;
 double angleDifference = 0.1745;
+double angleMinLeft = 3.49;
+double angleMaxRight = 2.79;
+
+double offsetX = 0;
+double offsetY = 0;
+
+int minLineSize = 35;
 
 BUTTONS button = NONE;
 LANGUAGE lng = EN;
+THEME globalTheme = DEFAULT;
+
+bool leftArrow = false;
+bool rightArrow = false;
+bool upArrow = false;
+bool downArrow = false;
+
+float time = 10000;
 
 buttonSettings animEval_1[4];
 buttonSettings animEval_2[4];
@@ -28,6 +43,7 @@ buttonSettings newExp[4];
 
 bool isInitialized = false;
 bool isButtonSettingsDeclared = false;
+bool isEvaluated = false;
 
 BinaryTree* expressionTree;
 
@@ -265,6 +281,8 @@ void readInput()
 
 void initializeWindow(THEME theme)
 {
+    globalTheme = theme;
+    Beep(3000,100);
     if(!isButtonSettingsDeclared)
     {
         isButtonSettingsDeclared = true;
@@ -273,6 +291,7 @@ void initializeWindow(THEME theme)
     if(!isInitialized)
     {
         initwindow(WIDTH,HEIGHT,"ExTree");
+        isEvaluated = false;
         isInitialized = true;
     }
     switch(theme)
@@ -337,40 +356,90 @@ void runProgram()
     while(button != QUIT)
     {
         getmouseclick(WM_LBUTTONDOWN,mouseX,mouseY);
-        // moveTree(); --------------------------------------------------------------------DE IMPLEMENTAT
+
+        if(GetAsyncKeyState(VK_LEFT) && leftArrow == false && !isEvaluated)
+        {
+            leftArrow = true;
+            offsetX -= 10;
+            initializeWindow(globalTheme);
+            // Log("Left arrow pressed!\n");
+        }
+        else
+            if(GetAsyncKeyState(VK_RIGHT) && rightArrow == false && !isEvaluated)
+            {
+                rightArrow = true;
+                offsetX += 10;
+                initializeWindow(globalTheme);
+                // Log("Right arrow pressed!\n");
+            }
+            else
+                if(GetAsyncKeyState(VK_DOWN) && downArrow == false && !isEvaluated)
+                {
+                    downArrow = true;
+                    offsetY += 10;
+                    initializeWindow(globalTheme);
+                    // Log("Down arrow pressed!\n");
+                }
+                else
+                    if(GetAsyncKeyState(VK_UP) && upArrow == false && !isEvaluated)
+                    {
+                        upArrow = true;
+                        offsetY -= 10;
+                        initializeWindow(globalTheme);
+                        //Log("Up arrow pressed!\n");
+                    }
+                    else
+                    {
+                        if(time <= 0)
+                        {
+                            time = 100000;
+                            upArrow = false;
+                            downArrow = false;
+                            leftArrow = false;
+                            rightArrow = false;
+                        }
+                        else
+                            time -=2;
+
+                    }
+
+
         if(isAnimEvalPressed(mouseX,mouseY) && button != ANIM_EVAL)
         {
-            // Call AnimEval();
-            Log("Animated evaluation was pressed!");
             button = ANIM_EVAL;
+            AnimEval();
         }
-        if(isInstantEvalPressed(mouseX,mouseY) && button != INSTANT_EVAL)
+        if(isInstantEvalPressed(mouseX,mouseY) && button != INSTANT_EVAL && !isEvaluated)
         {
-            // Call InstantEval();
-            Log("Instant evaluation was pressed!");
             button = INSTANT_EVAL;
+            isEvaluated = true;
+            InstantEval();
         }
         if(isOptionsPressed(mouseX,mouseY) && button != OPTIONS)
         {
-            Log("Options was pressed!");
             button = OPTIONS;
             Options();
 
         }
         if(isAboutPressed(mouseX,mouseY) && button != ABOUT)
         {
-            Log("About was pressed!");
             button = ABOUT;
             About();
         }
         if(isQuitPressed(mouseX,mouseY) && button != QUIT)
         {
-            Log("Quit was pressed!");
             button = QUIT;
+            for(int i=2000;i>37;i-=100)
+            {
+                Beep(i,1+ i/20);
+                delay(10);
+            }
             closegraph();
         }
         if(isNewExpPressed(mouseX,mouseY))
         {
+            Beep(3000,200);
+            button = NONE;
             closegraph(CURRENT_WINDOW);
             isInitialized = false;
             readInput();
@@ -380,7 +449,31 @@ void runProgram()
 
 }
 
+void AnimEval()
+{
+    Beep(3000,100);
+}
 
+void InstantEval()
+{
+    setfillstyle(SOLID_FILL,getbkcolor());
+    settextstyle(textInfo.font,textInfo.direction,2);
+    bar(0,65,1260,HEIGHT);
+
+    Beep(3000,100);
+
+    std::string error;
+    std::string result = toString(evalExpressionTree(expressionTree,error));
+    int textW;
+
+    char* temp = (char*) malloc(256 * sizeof(char));
+    strcpy(temp, result.c_str());
+    textW = textwidth(temp);
+
+    rectangle(600 - textW/2, 100, 610 + textW/2,130);
+    outtextxy(605 - textW/2, 105, temp);
+    free(temp);
+}
 
 bool isAnimEvalPressed(int X, int Y){
     return ((X>=1310 && X<=1570) && (Y>=190 && Y<=305));
@@ -412,8 +505,9 @@ void drawAll(LANGUAGE lng)
     gettextsettings(&textInfo);
     getlinesettings(&lineInfo);
 
-    drawSquares();
+//    drawSquares();
     drawTree();
+    drawSquares();
     drawNewExp();
     drawTitle();
     drawAnimEval();
@@ -429,9 +523,9 @@ void drawTree()
     bar(0,65,1260,HEIGHT);
     settextstyle(textInfo.font,textInfo.direction,2);
 
-    drawNode(expressionTree, 600,100, 200);
+    drawNode(expressionTree, 600 + offsetX,100 + offsetY, 200, angleStartLeft, angleStartRight);
 }
-void drawNode(BinaryTree* tree, int x, int y, int lineSize)
+void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight)
 {
     if(tree == nullptr || tree == NULL) return;
 
@@ -449,33 +543,37 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize)
     }
 
     int V,W;
-    if(strcmp(temp,"-") == 0)
+    if(tree->right == nullptr)
     {
-        rectangle(x - textW/2, y, x + textW/2 + 10, y + 30);
-        outtextxy(x - textW/2 + 5, y + 5, temp);
+        rectangle(x - textW/2 + offsetX, y + offsetY, x + textW/2 + 10 + offsetX, y + 30 + offsetY);
+        outtextxy(x - textW/2 + 5  + offsetX, y + 5 + offsetY, temp);
         if(tree->left != nullptr)
         {
-            angle(x,y+30,PI,V,W, 30);
-            drawNode(tree->left,V,W,lineSize);
+            angle(x + offsetX,y+30 + offsetY,PI,V,W, 30);
+            drawNode(tree->left,V,W,lineSize, angleLeft, angleRight);
         }
     }
     else
     {
-        rectangle(x - textW/2, y, x + textW/2 + 10, y + 30);
-        outtextxy(x - textW/2 + 5, y + 5, temp);
+        rectangle(x - textW/2 + offsetX, y + offsetY, x + textW/2 + 10 + offsetX, y + 30 + offsetY);
+        outtextxy(x - textW/2 + 5 + offsetX, y + 5 + offsetY, temp);
         if(tree->left != nullptr)
         {
-            angle(x,y+30,angleLeft,V,W, lineSize);
-            angleLeft -= angleDifference;
-            drawNode(tree->left,V,W,lineSize * 9/10);
-            angleLeft +=angleDifference;
+            angle(x + offsetX,y+30 + offsetY,angleLeft,V,W, lineSize);
+
+            drawNode(tree->left,V,W,
+                     lineSize > minLineSize ? lineSize * 7/10 : minLineSize,
+                     angleLeft - angleDifference > angleMinLeft ? angleLeft - angleDifference : angleMinLeft,
+                     angleRight + angleDifference < angleMaxRight ? angleRight + angleDifference : angleMaxRight);
         }
         if(tree->right != nullptr)
         {
-            angle(x,y+30,angleRight,V,W, lineSize);
-            angleRight += angleDifference;
-            drawNode(tree->right,V,W,lineSize * 9/10 );
-            angleRight -=angleDifference;
+            angle(x + offsetX,y+30 + offsetY,angleRight,V,W, lineSize);
+
+            drawNode(tree->right,V,W,
+                     lineSize > minLineSize ? lineSize * 7/10 : minLineSize,
+                     angleLeft - angleDifference > angleMinLeft ? angleLeft - angleDifference : angleMinLeft,
+                     angleRight + angleDifference < angleMaxRight ? angleRight + angleDifference : angleMaxRight);
         }
     }
     free(temp);
@@ -493,6 +591,23 @@ void drawNewExp()
 
 void drawSquares()
 {
+    if(globalTheme == DEFAULT)
+    {
+        bar(1270,0,WIDTH,HEIGHT);
+        setfillstyle(SOLID_FILL,WHITE);
+    }
+    else
+        if(globalTheme == GREEN_BLUE)
+        {
+            bar(1270,0,WIDTH,HEIGHT);
+            setfillstyle(SOLID_FILL,COLOR(0,205,205));
+        }
+        else
+            if(globalTheme == PINKY)
+            {
+                bar(1270,0,WIDTH,HEIGHT);
+                setfillstyle(BKSLASH_FILL,COLOR(96, 15, 143));
+            }
     bar(1270,0,1275,HEIGHT);
     bar(1270,150,WIDTH,155);
 }
@@ -556,6 +671,8 @@ void Options()
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(1275,155,WIDTH,HEIGHT);
 
+    Beep(3000,100);
+
     // This draws the "Language" title and icons.
 
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
@@ -597,6 +714,7 @@ void Options()
             button = OPTIONS_Default;
             initializeWindow(DEFAULT);
             resetMouseClick();
+            Beep(3000,100);
             break;
         }
         if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && button != OPTIONS_Green_Blue)
@@ -604,6 +722,7 @@ void Options()
             button = OPTIONS_Green_Blue;
             initializeWindow(GREEN_BLUE);
             resetMouseClick();
+            Beep(3000,100);
             break;
         }
         if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && button != OPTIONS_Pinky)
@@ -611,28 +730,38 @@ void Options()
             button = OPTIONS_Pinky;
             initializeWindow(PINKY);
             resetMouseClick();
+            Beep(3000,100);
             break;
         }
         if(mouseX >= 1345 && mouseX <= 1420 && mouseY >= 280 && mouseY <= 330 && lng != EN)
         {
             lng = EN;
+            Beep(3000,100);
+            Beep(3000,100);
         }
         if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 280 && mouseY <= 330 && lng != RO)
         {
             lng = RO;
+            Beep(3000,100);
+            Beep(3000,100);
         }
         if(mouseX >= 1345 && mouseX <=1420 && mouseY >= 350 && mouseY <= 400 && lng != DE)
         {
             lng = DE;
+            Beep(3000,100);
+            Beep(3000,100);
         }
         if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 350 && mouseY <= 400 && lng != FR)
         {
             lng = FR;
+            Beep(3000,100);
+            Beep(3000,100);
         }
         if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != OPTIONS_Back)
         {
-            Log("Back from Options was pressed!");
             button = OPTIONS_Back;
+
+            Beep(3000,100);
 
             setfillstyle(SOLID_FILL,getbkcolor());
             bar(1275,155,WIDTH,HEIGHT);
@@ -654,6 +783,8 @@ void About()
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(1275,155,WIDTH,HEIGHT);
 
+    Beep(3000,100);
+
     // This draws the "Back" button.
     rectangle(1310,645,1570,725);
     outtextxy(about_back[lng].posX,about_back[lng].posY,about_back[lng].word);
@@ -665,15 +796,16 @@ void About()
     while(button != ABOUT_Back)
     {
         getmouseclick(WM_LBUTTONDOWN,mouseX, mouseY);
-        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 250 && mouseY <= 320 /*&& linkPressed == false*/)
+        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 250 && mouseY <= 320)
         {
+ //           ShellExecute(HWND_DESKTOP, "open", "https://www.youtube.com/watch?v=TPMubL67Mxo", NULL, NULL, SW_SHOWDEFAULT);
             ShellExecute(HWND_DESKTOP, "open", "https://github.com/UnexomWid/ExTree", NULL, NULL, SW_SHOWDEFAULT);
-            //linkPressed = true;
         }
         if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != ABOUT_Back)
         {
-            Log("Back from About was pressed!");
             button = ABOUT_Back;
+
+            Beep(3000,100);
 
             setfillstyle(SOLID_FILL,getbkcolor());
             bar(1275,155,WIDTH,HEIGHT);
@@ -705,8 +837,8 @@ void angle(int x, int y, double a, int &V, int &W, int lineSize)
     v = sin(a) * lineSize;
     w = (-1) * cos(a) * lineSize;
     line(x, y, x+v, y+w);
-    V = v + x;
-    W = w + y;
+    V = v + x - offsetX;
+    W = w + y - offsetY;
 }
 
 void resetMouseClick()

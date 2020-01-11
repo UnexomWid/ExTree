@@ -70,6 +70,12 @@ void initializeWindow(THEME theme = DEFAULT);
 /// This function runs the program, processing any input given by mouse.
 void runProgram();
 
+/// Evaluates using animation.
+void AnimEval();
+
+/// Evaluates instantly.
+void InstantEval();
+
 /// ----------------------------------------------------------------
 /// Functions that verify whether something is true or not.
 /// ----------------------------------------------------------------
@@ -106,7 +112,7 @@ void drawNewExp();
 void drawTree();
 
 /// Draws a particular node.
-void drawNode(BinaryTree* tree, int x, int y, int lineSize);
+void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight);
 
 /// Draws the title.
 void drawTitle();
