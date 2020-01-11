@@ -1,5 +1,7 @@
 #include "buttons.h"
 
+#define lineSize 30
+
 struct textsettingstype textInfo;
 struct linesettingstype lineInfo;
 struct fillsettingstype fillInfo;
@@ -446,30 +448,18 @@ void drawTree()
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(0,65,1260,HEIGHT);
     settextstyle(textInfo.font,textInfo.direction,2);
-//    char* t = "Testul";
-//    char* t1 = "Test2";
-//    char* t2 = "Un test mult mai lung";
-//    int var = textwidth(t);
-//    int var1 = textwidth(t1);
-//    int var2 = textwidth(t2);
-//    rectangle(600 - var/2,100, 610+ var/2,130);
-//    outtextxy(600 - var/2 + 5, 105, t);
-//    line(600,130,610 + var/2,150);
-
 
     //drawNode(expressionTree, 0,600);
 }
-void drawNode(BinaryTree* tree, int contor, int topCenter)
+void drawNode(BinaryTree* tree, int x, int y)
 {
     if(tree == nullptr) return;
-    int w;
+
+    int textW;
     char * temp;
     strcpy(temp, tree->data.c_str());
-    w = textwidth(temp);
+    textW = textwidth(temp);
 
-    rectangle(topCenter,100 + contor*50,topCenter + 10 + w, 130 + contor*50);
-    outtextxy(topCenter + 5, 105 + contor*50, temp);
-    line()
 
     if(temp == "neg")
     {
@@ -693,6 +683,15 @@ void About()
 void Log(char* message)
 {
     std::cout<<message<<std::endl;
+}
+
+void angle(int x, int y, double a)
+{
+    int v;
+    int w;
+    v = sin(a) * lineSize;
+    w = -cos(a) * lineSize;
+    line(x, y, x+v, y+w);
 }
 
 void resetMouseClick()
