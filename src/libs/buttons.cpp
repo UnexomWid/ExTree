@@ -457,11 +457,16 @@ void drawNode(BinaryTree* tree, int x, int y)
 
     int textW;
     char * temp;
-    strcpy(temp, tree->data.c_str());
-    textW = textwidth(temp);
+
+    if(tree->data != "neg"){
+        strcpy(temp, tree->data.c_str());
+        textW = textwidth(temp);
+    }
+    else
+        temp = "-";
 
 
-    if(temp == "neg")
+    if(temp == "-")
     {
 
     }
