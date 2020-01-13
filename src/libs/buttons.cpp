@@ -445,6 +445,14 @@ void runProgram()
             readInput();
             initializeWindow();
         }
+        if(isArrowPressed(mouseX,mouseY) && button != ARROW && (button == ANIM_EVAL || button == INSTANT_EVAL))
+        {
+            Beep(3000,100);
+            button = ARROW;
+            isEvaluated = false;
+            drawTree();
+
+        }
     }
 
 }
@@ -499,6 +507,9 @@ bool isNewExpPressed(int X, int Y){
     return (X>=0 && X<=420) && (Y>=0 && Y<=60);
 }
 
+bool isArrowPressed(int X, int Y){
+    return X>1200 && X<1265 && Y>=0 && Y<65;
+}
 
 void drawAll(LANGUAGE lng)
 {
@@ -508,6 +519,7 @@ void drawAll(LANGUAGE lng)
 //    drawSquares();
     drawTree();
     drawSquares();
+    drawArrow();
     drawNewExp();
     drawTitle();
     drawAnimEval();
@@ -525,6 +537,7 @@ void drawTree()
 
     drawNode(expressionTree, 600 + offsetX,100 + offsetY, 200, angleStartLeft, angleStartRight);
 }
+
 void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight)
 {
     if(tree == nullptr || tree == NULL) return;
@@ -587,6 +600,11 @@ void drawNewExp()
     line(420,60,420,0);
     settextstyle(textInfo.font,textInfo.direction,5);
     outtextxy(newExp[lng].posX,newExp[lng].posY,newExp[lng].word);
+}
+
+void drawArrow()
+{
+    readimagefile("assets\\images\\arrow.jpg",1200,0,1265,65);
 }
 
 void drawSquares()

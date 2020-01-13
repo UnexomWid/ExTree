@@ -54,7 +54,7 @@ enum LANGUAGE{
 
 /// All buttons available.
 enum BUTTONS{
-    NONE,ANIM_EVAL,INSTANT_EVAL,OPTIONS,ABOUT,QUIT, OPTIONS_Back, OPTIONS_Default, OPTIONS_Green_Blue, OPTIONS_Pinky, ABOUT_Back
+    NONE,ANIM_EVAL,INSTANT_EVAL,OPTIONS,ABOUT,QUIT, OPTIONS_Back, OPTIONS_Default, OPTIONS_Green_Blue, OPTIONS_Pinky, ABOUT_Back, ARROW
 };
 
 /// ----------------------------------------------------------------
@@ -98,6 +98,9 @@ bool isQuitPressed(int X, int Y);
 /// Returns whether or not the "New expression" button was pressed.
 bool isNewExpPressed(int X, int Y);
 
+/// Returns whether or not the "Arrow" button was pressed.
+bool isArrowPressed(int X,int Y);
+
 /// ----------------------------------------------------------------
 /// Functions that ONLY draw the GUI.
 /// ----------------------------------------------------------------
@@ -107,6 +110,9 @@ void drawAll(LANGUAGE lng = EN);
 
 /// Draws the new expression button.
 void drawNewExp();
+
+/// Draws the reverse arrow.
+void drawArrow();
 
 /// Draws the tree.
 void drawTree();
