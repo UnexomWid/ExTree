@@ -3,8 +3,6 @@
 #include "libs/queue.h"
 #include "libs/tree.h"
 
-using namespace std;
-
 int main()
 {
     readInput();
