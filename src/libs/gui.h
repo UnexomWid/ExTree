@@ -75,13 +75,13 @@ void initializeWindow(THEME theme = DEFAULT);
 void runProgram();
 
 /// Evaluates using animation.
-void AnimEval();
+void animEval();
 
 /// Evaluates an expression tree using animation.
 double evalExpressionTreeAnimated(BinaryTree* &tree);
 
 /// Evaluates instantly.
-void InstantEval();
+void instantEval();
 
 /// ----------------------------------------------------------------
 /// Functions that verify whether something is true or not.
@@ -149,10 +149,10 @@ void drawAbout();
 void drawQuit();
 
 /// Draws the Options GUI when this button is pressed.
-void Options();
+void options();
 
 /// Draws the About GUI when this button is pressed.
-void About();
+void about();
 
 /// ----------------------------------------------------------------
 /// Helper functions.

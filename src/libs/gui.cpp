@@ -28,17 +28,17 @@ bool downArrow = false;
 
 float time = 10000;
 
-buttonSettings animEval_1[4];
-buttonSettings animEval_2[4];
-buttonSettings instantEval_1[4];
-buttonSettings instantEval_2[4];
-buttonSettings options[4];
-buttonSettings about[4];
-buttonSettings quit[4];
-buttonSettings options_lng[4];
-buttonSettings options_back[4];
-buttonSettings options_themes[4];
-buttonSettings about_back[4];
+buttonSettings animEvalTopText[4];
+buttonSettings animEvalBottomText[4];
+buttonSettings instantEvalTopText[4];
+buttonSettings instantEvalBottomText[4];
+buttonSettings optionsText[4];
+buttonSettings aboutText[4];
+buttonSettings quitText[4];
+buttonSettings optionsLanguageText[4];
+buttonSettings optionsBackText[4];
+buttonSettings optionsThemesText[4];
+buttonSettings aboutBackText[4];
 buttonSettings newExp[4];
 
 bool isInitialized = false;
@@ -51,53 +51,52 @@ BinaryTree* expressionTree = nullptr;
 BinaryTree* originalTree = nullptr;
 BinaryTree* unsubstitutedTree = nullptr;
 
-void defineButtonSettings()
-{
+void defineButtonSettings() {
     // English.
 
-    animEval_1[0].word = "Animated";
-    animEval_1[0].posX = 1340;
-    animEval_1[0].posY = 200;
+    animEvalTopText[0].word = "Animated";
+    animEvalTopText[0].posX = 1340;
+    animEvalTopText[0].posY = 200;
 
-    animEval_2[0].word = "evaluation";
-    animEval_2[0].posX = 1330;
-    animEval_2[0].posY = 250;
+    animEvalBottomText[0].word = "evaluation";
+    animEvalBottomText[0].posX = 1330;
+    animEvalBottomText[0].posY = 250;
 
-    instantEval_1[0].word = "Instant";
-    instantEval_1[0].posX = 1360;
-    instantEval_1[0].posY = 330;
+    instantEvalTopText[0].word = "Instant";
+    instantEvalTopText[0].posX = 1360;
+    instantEvalTopText[0].posY = 330;
 
-    instantEval_2[0].word = "evaluation";
-    instantEval_2[0].posX = 1330;
-    instantEval_2[0].posY = 380;
+    instantEvalBottomText[0].word = "evaluation";
+    instantEvalBottomText[0].posX = 1330;
+    instantEvalBottomText[0].posY = 380;
 
-    options[0].word = "Options";
-    options[0].posX = 1355;
-    options[0].posY = 470;
+    optionsText[0].word = "Options";
+    optionsText[0].posX = 1355;
+    optionsText[0].posY = 470;
 
-    about[0].word = "About";
-    about[0].posX = 1375;
-    about[0].posY = 568;
+    aboutText[0].word = "About";
+    aboutText[0].posX = 1375;
+    aboutText[0].posY = 568;
 
-    quit[0].word = "Quit";
-    quit[0].posX = 1390;
-    quit[0].posY = 665;
+    quitText[0].word = "Quit";
+    quitText[0].posX = 1390;
+    quitText[0].posY = 665;
 
-    options_lng[0].word = "Language";
-    options_lng[0].posX = 1325;
-    options_lng[0].posY = 220;
+    optionsLanguageText[0].word = "Language";
+    optionsLanguageText[0].posX = 1325;
+    optionsLanguageText[0].posY = 220;
 
-    options_back[0].word = "Back";
-    options_back[0].posX = 1385;
-    options_back[0].posY = 665;
+    optionsBackText[0].word = "Back";
+    optionsBackText[0].posX = 1385;
+    optionsBackText[0].posY = 665;
 
-    options_themes[0].word = "Theme";
-    options_themes[0].posX = 1360;
-    options_themes[0].posY = 425;
+    optionsThemesText[0].word = "Theme";
+    optionsThemesText[0].posX = 1360;
+    optionsThemesText[0].posY = 425;
 
-    about_back[0].word = "Back";
-    about_back[0].posX = 1385;
-    about_back[0].posY = 665;
+    aboutBackText[0].word = "Back";
+    aboutBackText[0].posX = 1385;
+    aboutBackText[0].posY = 665;
 
     newExp[0].word = "New expression";
     newExp[0].posX = 35;
@@ -105,49 +104,49 @@ void defineButtonSettings()
 
     // Romanian.
 
-    animEval_1[1].word = "Evaluare";
-    animEval_1[1].posX = 1350;
-    animEval_1[1].posY = 200;
+    animEvalTopText[1].word = "Evaluare";
+    animEvalTopText[1].posX = 1350;
+    animEvalTopText[1].posY = 200;
 
-    animEval_2[1].word = "animata";
-    animEval_2[1].posX = 1355;
-    animEval_2[1].posY = 250;
+    animEvalBottomText[1].word = "animata";
+    animEvalBottomText[1].posX = 1355;
+    animEvalBottomText[1].posY = 250;
 
-    instantEval_1[1].word = "Evaluare";
-    instantEval_1[1].posX = 1350;
-    instantEval_1[1].posY = 330;
+    instantEvalTopText[1].word = "Evaluare";
+    instantEvalTopText[1].posX = 1350;
+    instantEvalTopText[1].posY = 330;
 
-    instantEval_2[1].word = "instanta";
-    instantEval_2[1].posX = 1355;
-    instantEval_2[1].posY = 380;
+    instantEvalBottomText[1].word = "instanta";
+    instantEvalBottomText[1].posX = 1355;
+    instantEvalBottomText[1].posY = 380;
 
-    options[1].word = "Optiuni";
-    options[1].posX = 1360;
-    options[1].posY = 470;
+    optionsText[1].word = "Optiuni";
+    optionsText[1].posX = 1360;
+    optionsText[1].posY = 470;
 
-    about[1].word = "Despre";
-    about[1].posX = 1360;
-    about[1].posY = 568;
+    aboutText[1].word = "Despre";
+    aboutText[1].posX = 1360;
+    aboutText[1].posY = 568;
 
-    quit[1].word = "Iesire";
-    quit[1].posX = 1380;
-    quit[1].posY = 665;
+    quitText[1].word = "Iesire";
+    quitText[1].posX = 1380;
+    quitText[1].posY = 665;
 
-    options_lng[1].word = "Limba";
-    options_lng[1].posX = 1370;
-    options_lng[1].posY = 220;
+    optionsLanguageText[1].word = "Limba";
+    optionsLanguageText[1].posX = 1370;
+    optionsLanguageText[1].posY = 220;
 
-    options_back[1].word = "Inapoi";
-    options_back[1].posX = 1370;
-    options_back[1].posY = 665;
+    optionsBackText[1].word = "Inapoi";
+    optionsBackText[1].posX = 1370;
+    optionsBackText[1].posY = 665;
 
-    options_themes[1].word = "Tema";
-    options_themes[1].posX = 1370;
-    options_themes[1].posY = 425;
+    optionsThemesText[1].word = "Tema";
+    optionsThemesText[1].posX = 1370;
+    optionsThemesText[1].posY = 425;
 
-    about_back[1].word = "Inapoi";
-    about_back[1].posX = 1370;
-    about_back[1].posY = 665;
+    aboutBackText[1].word = "Inapoi";
+    aboutBackText[1].posX = 1370;
+    aboutBackText[1].posY = 665;
 
     newExp[1].word = "Expresie noua";
     newExp[1].posX = 40;
@@ -155,49 +154,49 @@ void defineButtonSettings()
 
     // German.
 
-    animEval_1[2].word = "Animirte";
-    animEval_1[2].posX = 1355;
-    animEval_1[2].posY = 200;
+    animEvalTopText[2].word = "Animirte";
+    animEvalTopText[2].posX = 1355;
+    animEvalTopText[2].posY = 200;
 
-    animEval_2[2].word = "Auswertung";
-    animEval_2[2].posX = 1313;
-    animEval_2[2].posY = 250;
+    animEvalBottomText[2].word = "Auswertung";
+    animEvalBottomText[2].posX = 1313;
+    animEvalBottomText[2].posY = 250;
 
-    instantEval_1[2].word = "Direkte";
-    instantEval_1[2].posX = 1360;
-    instantEval_1[2].posY = 330;
+    instantEvalTopText[2].word = "Direkte";
+    instantEvalTopText[2].posX = 1360;
+    instantEvalTopText[2].posY = 330;
 
-    instantEval_2[2].word = "Auswertung";
-    instantEval_2[2].posX = 1313;
-    instantEval_2[2].posY = 380;
+    instantEvalBottomText[2].word = "Auswertung";
+    instantEvalBottomText[2].posX = 1313;
+    instantEvalBottomText[2].posY = 380;
 
-    options[2].word = "Optionen";
-    options[2].posX = 1340;
-    options[2].posY = 470;
+    optionsText[2].word = "Optionen";
+    optionsText[2].posX = 1340;
+    optionsText[2].posY = 470;
 
-    about[2].word = "Uber";
-    about[2].posX = 1390;
-    about[2].posY = 568;
+    aboutText[2].word = "Uber";
+    aboutText[2].posX = 1390;
+    aboutText[2].posY = 568;
 
-    quit[2].word = "Endet";
-    quit[2].posX = 1375;
-    quit[2].posY = 665;
+    quitText[2].word = "Endet";
+    quitText[2].posX = 1375;
+    quitText[2].posY = 665;
 
-    options_lng[2].word = "Sprache";
-    options_lng[2].posX = 1350;
-    options_lng[2].posY = 220;
+    optionsLanguageText[2].word = "Sprache";
+    optionsLanguageText[2].posX = 1350;
+    optionsLanguageText[2].posY = 220;
 
-    options_back[2].word = "Zuruck";
-    options_back[2].posX = 1370;
-    options_back[2].posY = 665;
+    optionsBackText[2].word = "Zuruck";
+    optionsBackText[2].posX = 1370;
+    optionsBackText[2].posY = 665;
 
-    options_themes[2].word = "Thema";
-    options_themes[2].posX = 1360;
-    options_themes[2].posY = 425;
+    optionsThemesText[2].word = "Thema";
+    optionsThemesText[2].posX = 1360;
+    optionsThemesText[2].posY = 425;
 
-    about_back[2].word = "Zuruck";
-    about_back[2].posX = 1370;
-    about_back[2].posY = 665;
+    aboutBackText[2].word = "Zuruck";
+    aboutBackText[2].posX = 1370;
+    aboutBackText[2].posY = 665;
 
     newExp[2].word = "Neue Expression";
     newExp[2].posX = 20;
@@ -205,57 +204,56 @@ void defineButtonSettings()
 
     // French.
 
-    animEval_1[3].word = "Evaluation";
-    animEval_1[3].posX = 1330;
-    animEval_1[3].posY = 200;
+    animEvalTopText[3].word = "Evaluation";
+    animEvalTopText[3].posX = 1330;
+    animEvalTopText[3].posY = 200;
 
-    animEval_2[3].word = "animee";
-    animEval_2[3].posX = 1360;
-    animEval_2[3].posY = 250;
+    animEvalBottomText[3].word = "animee";
+    animEvalBottomText[3].posX = 1360;
+    animEvalBottomText[3].posY = 250;
 
-    instantEval_1[3].word = "Evaluation";
-    instantEval_1[3].posX = 1330;
-    instantEval_1[3].posY = 330;
+    instantEvalTopText[3].word = "Evaluation";
+    instantEvalTopText[3].posX = 1330;
+    instantEvalTopText[3].posY = 330;
 
-    instantEval_2[3].word = "instantanee";
-    instantEval_2[3].posX = 1315;
-    instantEval_2[3].posY = 380;
+    instantEvalBottomText[3].word = "instantanee";
+    instantEvalBottomText[3].posX = 1315;
+    instantEvalBottomText[3].posY = 380;
 
-    options[3].word = "Options";
-    options[3].posX = 1355;
-    options[3].posY = 470;
+    optionsText[3].word = "Options";
+    optionsText[3].posX = 1355;
+    optionsText[3].posY = 470;
 
-    about[3].word = "Infos";
-    about[3].posX = 1385;
-    about[3].posY = 568;
+    aboutText[3].word = "Infos";
+    aboutText[3].posX = 1385;
+    aboutText[3].posY = 568;
 
-    quit[3].word = "Quitter";
-    quit[3].posX = 1370;
-    quit[3].posY = 665;
+    quitText[3].word = "Quitter";
+    quitText[3].posX = 1370;
+    quitText[3].posY = 665;
 
-    options_lng[3].word = "Langue";
-    options_lng[3].posX = 1350;
-    options_lng[3].posY = 220;
+    optionsLanguageText[3].word = "Langue";
+    optionsLanguageText[3].posX = 1350;
+    optionsLanguageText[3].posY = 220;
 
-    options_back[3].word = "Revenu";
-    options_back[3].posX = 1360;
-    options_back[3].posY = 665;
+    optionsBackText[3].word = "Revenu";
+    optionsBackText[3].posX = 1360;
+    optionsBackText[3].posY = 665;
 
-    options_themes[3].word = "Theme";
-    options_themes[3].posX = 1360;
-    options_themes[3].posY = 425;
+    optionsThemesText[3].word = "Theme";
+    optionsThemesText[3].posX = 1360;
+    optionsThemesText[3].posY = 425;
 
-    about_back[3].word = "Revenu";
-    about_back[3].posX = 1360;
-    about_back[3].posY = 665;
+    aboutBackText[3].word = "Revenu";
+    aboutBackText[3].posX = 1360;
+    aboutBackText[3].posY = 665;
 
     newExp[3].word = "Nouvele expression";
     newExp[3].posX = 5;
     newExp[3].posY = 5;
 }
 
-void readInput()
-{
+void readInput() {
     read_input:
 
     char s[256];
@@ -297,8 +295,7 @@ void readInput()
     }
 }
 
-void initializeWindow(THEME theme)
-{
+void initializeWindow(THEME theme) {
     globalTheme = theme;
     Beep(3000,100);
     if(!isButtonSettingsDeclared)
@@ -369,8 +366,7 @@ void initializeWindow(THEME theme)
     }
 }
 
-void runProgram()
-{
+void runProgram() {
     while(button != QUIT)
     {
         getmouseclick(WM_LBUTTONDOWN,mouseX,mouseY);
@@ -380,7 +376,6 @@ void runProgram()
             leftArrow = true;
             offsetX -= 10;
             initializeWindow(globalTheme);
-            // Log("Left arrow pressed!\n");
         }
         else
             if(GetAsyncKeyState(VK_RIGHT) && rightArrow == false && !isEvaluated)
@@ -388,7 +383,6 @@ void runProgram()
                 rightArrow = true;
                 offsetX += 10;
                 initializeWindow(globalTheme);
-                // Log("Right arrow pressed!\n");
             }
             else
                 if(GetAsyncKeyState(VK_DOWN) && downArrow == false && !isEvaluated)
@@ -396,7 +390,6 @@ void runProgram()
                     downArrow = true;
                     offsetY += 10;
                     initializeWindow(globalTheme);
-                    // Log("Down arrow pressed!\n");
                 }
                 else
                     if(GetAsyncKeyState(VK_UP) && upArrow == false && !isEvaluated)
@@ -404,7 +397,6 @@ void runProgram()
                         upArrow = true;
                         offsetY -= 10;
                         initializeWindow(globalTheme);
-                        //Log("Up arrow pressed!\n");
                     }
                     else
                     {
@@ -418,9 +410,7 @@ void runProgram()
                         }
                         else
                             time -=2;
-
                     }
-
 
         if(isAnimEvalPressed(mouseX,mouseY) && button != ANIM_EVAL)
         {
@@ -437,11 +427,11 @@ void runProgram()
 
                 readVariables();
 
-                initializeWindow();
+                initializeWindow(globalTheme);
             } else {
                 originalTree = expressionTree->copy();
                 substituteConstants(expressionTree);
-                AnimEval();
+                animEval();
                 isEvaluated = true;
             }
         }
@@ -460,24 +450,24 @@ void runProgram()
 
                 readVariables();
 
-                initializeWindow();
+                initializeWindow(globalTheme);
             } else {
                 originalTree = expressionTree->copy();
                 substituteConstants(expressionTree);
-                InstantEval();
+                instantEval();
                 isEvaluated = true;
             }
         }
         if(isOptionsPressed(mouseX,mouseY) && button != OPTIONS)
         {
             button = OPTIONS;
-            Options();
+            options();
 
         }
         if(isAboutPressed(mouseX,mouseY) && button != ABOUT)
         {
             button = ABOUT;
-            About();
+            about();
         }
         if(isQuitPressed(mouseX,mouseY) && button != QUIT)
         {
@@ -522,16 +512,17 @@ void runProgram()
 
             initializeWindow();
         }
-        if(isArrowPressed(mouseX,mouseY) && button != ARROW && (button == ANIM_EVAL || button == INSTANT_EVAL))
+        if(isArrowPressed(mouseX,mouseY) && isEvaluated /*button != ARROW && (button == ANIM_EVAL || button == INSTANT_EVAL)*/)
         {
             Beep(3000,100);
             button = ARROW;
             isEvaluated = false;
 
-            if(originalTree != nullptr) {
-                expressionTree = originalTree->copy();
-                originalTree = nullptr;
-            }
+//            if(originalTree != nullptr) {
+//                expressionTree = originalTree->copy();
+//                originalTree = nullptr;
+//            }
+            expressionTree = unsubstitutedTree->copy();
 
             drawTree();
         }
@@ -581,9 +572,25 @@ void readVariables() {
     expressionTree = originalTree->copy();
 }
 
-void AnimEval()
+void animEval()
 {
+    setfillstyle(SOLID_FILL,getbkcolor());
+    bar(0,0,1260,HEIGHT);
+    drawNewExp();
+    drawArrow();
+    if(globalTheme == DEFAULT)
+        setlinestyle(SOLID_LINE,0,1);
+    else
+        if(globalTheme == GREEN_BLUE)
+            setlinestyle(DOTTED_LINE,0,1);
+        else
+            if(globalTheme == PINKY)
+                setlinestyle(DASHED_LINE,0,1);
+    settextstyle(textInfo.font,textInfo.direction,2);
+
     Beep(3000,100);
+    offsetX = 0;
+    offsetY = 0;
 
     evalExpressionTreeAnimated(expressionTree);
 }
@@ -673,11 +680,20 @@ double evalExpressionTreeAnimated(BinaryTree* &tree) {
     return 0;
 }
 
-void InstantEval()
-{
+void instantEval() {
     setfillstyle(SOLID_FILL,getbkcolor());
+    bar(0,0,1260,HEIGHT);
+    drawNewExp();
+    drawArrow();
+    if(globalTheme == DEFAULT)
+        setlinestyle(SOLID_LINE,0,1);
+    else
+        if(globalTheme == GREEN_BLUE)
+            setlinestyle(DOTTED_LINE,0,1);
+        else
+            if(globalTheme == PINKY)
+                setlinestyle(DASHED_LINE,0,1);
     settextstyle(textInfo.font,textInfo.direction,2);
-    bar(0,65,1260,HEIGHT);
 
     Beep(3000,100);
 
@@ -722,12 +738,10 @@ bool isArrowPressed(int X, int Y){
     return X>1200 && X<1265 && Y>=0 && Y<65;
 }
 
-void drawAll(LANGUAGE lng)
-{
+void drawAll(LANGUAGE lng) {
     gettextsettings(&textInfo);
     getlinesettings(&lineInfo);
 
-//    drawSquares();
     drawTree();
     drawSquares();
     drawArrow();
@@ -740,17 +754,24 @@ void drawAll(LANGUAGE lng)
     drawQuit();
 }
 
-void drawTree()
-{
+void drawTree() {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(0,65,1260,HEIGHT);
     settextstyle(textInfo.font,textInfo.direction,2);
 
+    if(globalTheme == DEFAULT)
+        setlinestyle(SOLID_LINE,0,1);
+    else
+        if(globalTheme == GREEN_BLUE)
+            setlinestyle(DOTTED_LINE,0,1);
+        else
+            if(globalTheme == PINKY)
+                setlinestyle(DASHED_LINE,0,1);
+
     drawNode(expressionTree, 600 + offsetX,100 + offsetY, 200, angleStartLeft, angleStartRight);
 }
 
-void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight)
-{
+void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight) {
     if(tree == nullptr || tree == NULL) return;
 
     int textW;
@@ -803,8 +824,7 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, do
     free(temp);
 }
 
-void drawNewExp()
-{
+void drawNewExp() {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(0,0,420,60);
     line(0,60,420,60);
@@ -813,13 +833,11 @@ void drawNewExp()
     outtextxy(newExp[lng].posX,newExp[lng].posY,newExp[lng].word);
 }
 
-void drawArrow()
-{
+void drawArrow() {
     readimagefile("assets\\images\\arrow.jpg",1200,0,1265,65);
 }
 
-void drawSquares()
-{
+void drawSquares() {
     if(globalTheme == DEFAULT)
     {
         bar(1270,0,WIDTH,HEIGHT);
@@ -841,73 +859,64 @@ void drawSquares()
     bar(1270,150,WIDTH,155);
 }
 
-void drawTitle()
-{
+void drawTitle() {
     settextstyle(textInfo.font,textInfo.direction,8);
     outtextxy(1325,40,"ExTree");
 }
 
-void drawAnimEval()
-{
+void drawAnimEval() {
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
     rectangle(1310,190,1570,305);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(animEval_1[lng].posX,animEval_1[lng].posY,animEval_1[lng].word);
-    outtextxy(animEval_2[lng].posX,animEval_2[lng].posY,animEval_2[lng].word);
+    outtextxy(animEvalTopText[lng].posX,animEvalTopText[lng].posY,animEvalTopText[lng].word);
+    outtextxy(animEvalBottomText[lng].posX,animEvalBottomText[lng].posY,animEvalBottomText[lng].word);
 }
 
-void drawInstantEval()
-{
+void drawInstantEval() {
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
     rectangle(1310,320,1570,435);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(instantEval_1[lng].posX,instantEval_1[lng].posY,instantEval_1[lng].word);
-    outtextxy(instantEval_2[lng].posX,instantEval_2[lng].posY,instantEval_2[lng].word);
+    outtextxy(instantEvalTopText[lng].posX,instantEvalTopText[lng].posY,instantEvalTopText[lng].word);
+    outtextxy(instantEvalBottomText[lng].posX,instantEvalBottomText[lng].posY,instantEvalBottomText[lng].word);
 }
 
-void drawOptions()
-{
+void drawOptions() {
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
     rectangle(1310,450,1570,535);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(options[lng].posX,options[lng].posY,options[lng].word);
+    outtextxy(optionsText[lng].posX,optionsText[lng].posY,optionsText[lng].word);
 }
 
-void drawAbout()
-{
+void drawAbout() {
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
     rectangle(1310,550,1570,630);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(about[lng].posX,about[lng].posY,about[lng].word);
+    outtextxy(aboutText[lng].posX,aboutText[lng].posY,aboutText[lng].word);
 }
 
-void drawQuit()
-{
+void drawQuit() {
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
     rectangle(1310,645,1570,725);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(quit[lng].posX,quit[lng].posY,quit[lng].word);
+    outtextxy(quitText[lng].posX,quitText[lng].posY,quitText[lng].word);
 }
 
 
-void Options()
-{
+void options() {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(1275,155,WIDTH,HEIGHT);
 
     Beep(3000,100);
 
-    // This draws the "Language" title and icons.
-
     setlinestyle(lineInfo.linestyle,lineInfo.upattern,2);
 
     settextstyle(textInfo.font,textInfo.direction,5);
-    outtextxy(options_lng[lng].posX,options_lng[lng].posY,options_lng[lng].word);
+    outtextxy(optionsLanguageText[lng].posX,optionsLanguageText[lng].posY,optionsLanguageText[lng].word);
 
     readimagefile("assets\\images\\britan_flag.jpg",1345,280,1420,330);
     rectangle(1345,280,1420,330);
@@ -919,14 +928,11 @@ void Options()
     rectangle(1445,350,1520,400);
 
 
-    // This draws the "Back" button.
     rectangle(1310,645,1570,725);
-    outtextxy(options_back[lng].posX,options_back[lng].posY,options_back[lng].word);
+    outtextxy(optionsBackText[lng].posX,optionsBackText[lng].posY,optionsBackText[lng].word);
 
-    // This draws the "Themes" title.
-    outtextxy(options_themes[lng].posX,options_themes[lng].posY,options_themes[lng].word);
+    outtextxy(optionsThemesText[lng].posX,optionsThemesText[lng].posY,optionsThemesText[lng].word);
 
-    // This draws all button themes.
     settextstyle(textInfo.font,textInfo.direction,3);
     rectangle(1355,485,1520,520);
     outtextxy(1390,490,"DEFAULT");
@@ -938,28 +944,39 @@ void Options()
     while(button != OPTIONS_Back)
     {
         getmouseclick(WM_LBUTTONDOWN, mouseX, mouseY);
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 485 && mouseY <= 520 && button != OPTIONS_Default)
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 485 && mouseY <= 520 && globalTheme != DEFAULT)
         {
             button = OPTIONS_Default;
+
+            isEvaluated = false;
+            expressionTree = unsubstitutedTree->copy();
+            originalTree = expressionTree->copy();
+
             initializeWindow(DEFAULT);
             resetMouseClick();
-            Beep(3000,100);
             break;
         }
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && button != OPTIONS_Green_Blue)
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && globalTheme != GREEN_BLUE)
         {
             button = OPTIONS_Green_Blue;
+
+            isEvaluated = false;
+            expressionTree = unsubstitutedTree->copy();
+            originalTree = expressionTree->copy();
+
             initializeWindow(GREEN_BLUE);
             resetMouseClick();
-            Beep(3000,100);
             break;
         }
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && button != OPTIONS_Pinky)
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && globalTheme != PINKY)
         {
             button = OPTIONS_Pinky;
+
+            isEvaluated = false;
+            expressionTree = unsubstitutedTree->copy();
+            originalTree = expressionTree->copy();
             initializeWindow(PINKY);
             resetMouseClick();
-            Beep(3000,100);
             break;
         }
         if(mouseX >= 1345 && mouseX <= 1420 && mouseY >= 280 && mouseY <= 330 && lng != EN)
@@ -1007,8 +1024,7 @@ void Options()
     }
 }
 
-void About()
-{
+void about() {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(1275,155,WIDTH,HEIGHT);
 
@@ -1016,7 +1032,7 @@ void About()
 
     // This draws the "Back" button.
     rectangle(1310,645,1570,725);
-    outtextxy(about_back[lng].posX,about_back[lng].posY,about_back[lng].word);
+    outtextxy(aboutBackText[lng].posX,aboutBackText[lng].posY,aboutBackText[lng].word);
 
     // This draws the link rectangle.
     rectangle(1310,250,1570,320);
@@ -1059,8 +1075,7 @@ void Log(const char* format, ...) {
     va_end(va);
 }
 
-void angle(int x, int y, double a, int &V, int &W, int lineSize)
-{
+void angle(int x, int y, double a, int &V, int &W, int lineSize) {
     int v;
     int w;
     v = sin(a) * lineSize;
@@ -1070,7 +1085,6 @@ void angle(int x, int y, double a, int &V, int &W, int lineSize)
     W = w + y - offsetY;
 }
 
-void resetMouseClick()
-{
+void resetMouseClick() {
     mouseX = mouseY = -1;
 }
