@@ -20,6 +20,7 @@
 #include "stack.h"
 #include "charlib.h"
 #include "tree_stack.h"
+#include "tree_queue.h"
 #include "definitions.h"
 
 bool isOperator(const std::string &token);
@@ -29,6 +30,8 @@ bool isOperand(const std::string &token);
 bool isFunction(const std::string &token);
 
 bool isConstant(const std::string &token);
+
+bool isVariable(const std::string &token);
 
 bool isUnaryFunction(const std::string &token);
 
@@ -66,6 +69,9 @@ double evalBinaryFunction(const std::string &function, double left, double right
 
 /// Evaluates a binary expression tree. Any errors are stored in the 'error' parameter.
 double evalExpressionTree(BinaryTree* tree, std::string &error);
+
+/// Returns the next variable from a binary expression tree.
+std::string getNextVariable(BinaryTree* tree);
 
 /// Substitutes a variable with a value in an expression tree.
 void substitute(BinaryTree* &tree, const std::string &variable, double value);

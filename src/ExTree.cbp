@@ -32,14 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="libs/buttons.cpp" />
-		<Unit filename="libs/buttons.h">
-			<Option compile="1" />
-		</Unit>
 		<Unit filename="libs/charlib.cpp" />
 		<Unit filename="libs/charlib.h" />
+		<Unit filename="libs/definitions.h" />
 		<Unit filename="libs/expression_parser.cpp" />
 		<Unit filename="libs/expression_parser.h" />
+		<Unit filename="libs/gui.cpp" />
+		<Unit filename="libs/gui.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="libs/node.cpp" />
 		<Unit filename="libs/node.h">
 			<Option compile="1" />
@@ -56,6 +57,8 @@
 		<Unit filename="libs/tree.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="libs/tree_queue.cpp" />
+		<Unit filename="libs/tree_queue.h" />
 		<Unit filename="libs/tree_stack.cpp" />
 		<Unit filename="libs/tree_stack.h" />
 		<Unit filename="main.cpp" />

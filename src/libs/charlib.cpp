@@ -58,7 +58,7 @@ bool isArgumentSeparator(const char token) {
 
 bool isNumber(const std::string &token) {
     for(uint i = 0; i < token.size(); ++i)
-        if(!isDigit(token.at(i)) && !isArgumentSeparator(token.at(i)))
+        if(!isDigit(token.at(i)) && !isArgumentSeparator(token.at(i)) && token.at(i) != '-')
             return false;
     return true;
 }

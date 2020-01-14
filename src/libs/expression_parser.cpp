@@ -76,6 +76,12 @@ bool isOperand(const std::string &token) {
           !isNullOrWhitespace(token));
 }
 
+bool isVariable(const std::string &token) {
+    return isOperand(token) &&
+           !isNumber(token) &&
+           !isConstant(token);
+}
+
 bool isUnaryFunction(const std::string &token) {
     std::string lowerToken = toLower(token);
 
@@ -416,6 +422,10 @@ double evalUnaryFunction(const std::string &function, double argument, std::stri
             error = "Value " + toString(argument) + " out of range for unary function 'log'";
             return 0;
         }
+        if(argument == E)
+            return 1;
+        if(argument == 1)
+            return 0;
         return log(argument);
     }
     if(function == "log10") {
@@ -506,7 +516,15 @@ double evalBinaryFunction(const std::string &function, double left, double right
             error = "Value " + toString(left) + " out of range for function 'log'";
             return 0;
         }
+        if(right == 1 && left != 1) {
+            error = "Cannot apply 'log' binary function on base " + toString(right) + " and value " + toString(left);
+            return 0;
+        }
 
+        if(left == 1)
+            return 0;
+        if(left == right)
+            return 1;
         return log(left) / log(right);
     }
     if(function == "max") {
@@ -954,6 +972,31 @@ Queue toPostfix(const char* infix, std::string &error, uint &errorIndex) {
     return queue;
 }
 
+std::string getNextVariable(BinaryTree* tree) {
+    if(tree == nullptr)
+        return "";
+
+    TreeQueue queue;
+
+    queue.push(tree);
+
+    while(!queue.empty()) {
+        if(queue.front() != nullptr) {
+            if(isVariable(queue.front()->data))
+                return queue.front()->data;
+
+            if(queue.front()->right != nullptr)
+                queue.push(queue.front()->right);
+            if(queue.front()->left != nullptr)
+                queue.push(queue.front()->left);
+        }
+
+        queue.pop();
+    }
+
+    return "";
+}
+
 void substitute(BinaryTree* &tree, const std::string &variable, double value) {
     if(tree == nullptr)
         return;
@@ -983,6 +1026,8 @@ char* postfixToString(Queue postfix) {
         return nullptr;
 
     std::string string;
+
+    // Estimate the amount of space needed.
     string.reserve(postfix.size * 3);
 
     string += postfix.front();
