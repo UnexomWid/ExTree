@@ -518,11 +518,12 @@ void runProgram() {
             button = ARROW;
             isEvaluated = false;
 
-//            if(originalTree != nullptr) {
-//                expressionTree = originalTree->copy();
-//                originalTree = nullptr;
-//            }
-            expressionTree = unsubstitutedTree->copy();
+            if(originalTree != nullptr) {
+                expressionTree = originalTree->copy();
+                originalTree = nullptr;
+            }
+            else
+                expressionTree = unsubstitutedTree->copy();
 
             drawTree();
         }
