@@ -507,6 +507,7 @@ void runProgram() {
 }
 
 void readVariables() {
+
     readVariablesLoop:
 
     Log("\n%s\n\n", infixExpression.c_str());
@@ -778,7 +779,7 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, do
             angle(x + offsetX,y+30 + offsetY,angleLeft,V,W, lineSize);
 
             drawNode(tree->left,V,W,
-                     lineSize > minLineSize ? lineSize * 7/10 : minLineSize,
+                     lineSize > minLineSize ? lineSize * 6/10 : minLineSize,
                      angleLeft - angleDifference > angleMinLeft ? angleLeft - angleDifference : angleMinLeft,
                      angleRight + angleDifference < angleMaxRight ? angleRight + angleDifference : angleMaxRight);
         }
@@ -786,7 +787,7 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, do
             angle(x + offsetX,y+30 + offsetY,angleRight,V,W, lineSize);
 
             drawNode(tree->right,V,W,
-                     lineSize > minLineSize ? lineSize * 7/10 : minLineSize,
+                     lineSize > minLineSize ? lineSize * 6/10 : minLineSize,
                      angleLeft - angleDifference > angleMinLeft ? angleLeft - angleDifference : angleMinLeft,
                      angleRight + angleDifference < angleMaxRight ? angleRight + angleDifference : angleMaxRight);
         }
