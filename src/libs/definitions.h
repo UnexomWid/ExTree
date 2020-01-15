@@ -8,6 +8,9 @@
 
 #define DOUBLE_NUMBERS_FORMAT "%.15g"
 #define ANIMATION_DELAY 1000
+#define LINE_LENGTH 300
+#define TREE_SPEED 20
+#define TIME_SPEED 2
 
 #define uint unsigned int
 #define ushort unsigned short

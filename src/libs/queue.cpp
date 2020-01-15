@@ -6,12 +6,10 @@ Queue::Queue(){
     last =  new Node;
 }
 
-void Queue::push(std::string element)
-{
+void Queue::push(std::string element) {
     Node* node = new Node;
     node->data = element;
-    if(size == 0)
-    {
+    if(size == 0) {
         first = last = node;
         ++size;
         return;
@@ -22,8 +20,7 @@ void Queue::push(std::string element)
     ++size;
 }
 
-void Queue::pop()
-{
+void Queue::pop() {
     if(size == 0) return;
 
     Node* node = first;
@@ -32,16 +29,14 @@ void Queue::pop()
     --size;
 }
 
-std::string Queue::front()
-{
+std::string Queue::front() {
     if(size > 0) return first->data;
 
     std::string emptyString;
     return emptyString;
 }
 
-bool Queue::empty()
-{
+bool Queue::empty() {
     return size == 0;
 }
 

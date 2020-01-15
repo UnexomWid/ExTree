@@ -41,6 +41,7 @@
 		<Unit filename="libs/gui.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="libs/main.h" />
 		<Unit filename="libs/node.cpp" />
 		<Unit filename="libs/node.h">
 			<Option compile="1" />

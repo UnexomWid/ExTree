@@ -298,21 +298,17 @@ void readInput() {
 void initializeWindow(THEME theme) {
     globalTheme = theme;
     Beep(3000,100);
-    if(!isButtonSettingsDeclared)
-    {
+    if(!isButtonSettingsDeclared) {
         isButtonSettingsDeclared = true;
         defineButtonSettings();
     }
-    if(!isInitialized)
-    {
+    if(!isInitialized) {
         initwindow(WIDTH,HEIGHT,"ExTree");
         isEvaluated = false;
         isInitialized = true;
     }
-    switch(theme)
-    {
-    case DEFAULT:
-        {
+    switch(theme) {
+    case DEFAULT: {
             // Sets the background to a specified color.
             setfillstyle(SOLID_FILL,BLUE);
             setbkcolor(BLUE);
@@ -331,8 +327,7 @@ void initializeWindow(THEME theme) {
             drawAll();
             break;
         }
-    case GREEN_BLUE:
-        {
+    case GREEN_BLUE: {
             setfillstyle(SOLID_FILL,COLOR(0,51,0));
             setbkcolor(COLOR(0,51,0));
             bar(0,0,WIDTH,HEIGHT);
@@ -347,8 +342,7 @@ void initializeWindow(THEME theme) {
             drawAll();
             break;
         }
-    case PINKY:
-        {
+    case PINKY: {
             setfillstyle(SOLID_FILL,COLOR(255,79,167));
             setbkcolor(COLOR(255,79,167));
             bar(0,0,WIDTH,HEIGHT);
@@ -367,41 +361,30 @@ void initializeWindow(THEME theme) {
 }
 
 void runProgram() {
-    while(button != QUIT)
-    {
+    while(button != QUIT) {
         getmouseclick(WM_LBUTTONDOWN,mouseX,mouseY);
 
-        if(GetAsyncKeyState(VK_LEFT) && leftArrow == false && !isEvaluated)
-        {
+        if(GetAsyncKeyState(VK_LEFT) && leftArrow == false && !isEvaluated) {
             leftArrow = true;
-            offsetX -= 10;
+            offsetX -= TREE_SPEED;
             initializeWindow(globalTheme);
         }
-        else
-            if(GetAsyncKeyState(VK_RIGHT) && rightArrow == false && !isEvaluated)
-            {
+        else if(GetAsyncKeyState(VK_RIGHT) && rightArrow == false && !isEvaluated) {
                 rightArrow = true;
-                offsetX += 10;
+                offsetX += TREE_SPEED;
                 initializeWindow(globalTheme);
             }
-            else
-                if(GetAsyncKeyState(VK_DOWN) && downArrow == false && !isEvaluated)
-                {
+            else if(GetAsyncKeyState(VK_DOWN) && downArrow == false && !isEvaluated) {
                     downArrow = true;
-                    offsetY += 10;
+                    offsetY += TREE_SPEED;
                     initializeWindow(globalTheme);
                 }
-                else
-                    if(GetAsyncKeyState(VK_UP) && upArrow == false && !isEvaluated)
-                    {
+                else if(GetAsyncKeyState(VK_UP) && upArrow == false && !isEvaluated) {
                         upArrow = true;
-                        offsetY -= 10;
+                        offsetY -= TREE_SPEED;
                         initializeWindow(globalTheme);
                     }
-                    else
-                    {
-                        if(time <= 0)
-                        {
+                    else if(time <= 0){
                             time = 100000;
                             upArrow = false;
                             downArrow = false;
@@ -409,11 +392,9 @@ void runProgram() {
                             rightArrow = false;
                         }
                         else
-                            time -=2;
-                    }
+                            time -=TIME_SPEED;
 
-        if(isAnimEvalPressed(mouseX,mouseY) && button != ANIM_EVAL)
-        {
+        if(isAnimEvalPressed(mouseX,mouseY) && button != ANIM_EVAL) {
             button = ANIM_EVAL;
 
             if(!isNullOrWhitespace(getNextVariable(expressionTree))) {
@@ -431,12 +412,11 @@ void runProgram() {
             } else {
                 originalTree = expressionTree->copy();
                 substituteConstants(expressionTree);
-                animEval();
                 isEvaluated = true;
+                animEval();
             }
         }
-        if(isInstantEvalPressed(mouseX,mouseY) && button != INSTANT_EVAL && !isEvaluated)
-        {
+        if(isInstantEvalPressed(mouseX,mouseY) && button != INSTANT_EVAL && !isEvaluated) {
             button = INSTANT_EVAL;
 
             if(!isNullOrWhitespace(getNextVariable(expressionTree))) {
@@ -454,23 +434,19 @@ void runProgram() {
             } else {
                 originalTree = expressionTree->copy();
                 substituteConstants(expressionTree);
-                instantEval();
                 isEvaluated = true;
+                instantEval();
             }
         }
-        if(isOptionsPressed(mouseX,mouseY) && button != OPTIONS)
-        {
+        if(isOptionsPressed(mouseX,mouseY) && button != OPTIONS) {
             button = OPTIONS;
             options();
-
         }
-        if(isAboutPressed(mouseX,mouseY) && button != ABOUT)
-        {
+        if(isAboutPressed(mouseX,mouseY) && button != ABOUT) {
             button = ABOUT;
             about();
         }
-        if(isQuitPressed(mouseX,mouseY) && button != QUIT)
-        {
+        if(isQuitPressed(mouseX,mouseY) && button != QUIT) {
             button = QUIT;
             for(int i=2000;i>37;i-=100)
             {
@@ -479,8 +455,7 @@ void runProgram() {
             }
             closegraph();
         }
-        if(isNewExpPressed(mouseX,mouseY))
-        {
+        if(isNewExpPressed(mouseX,mouseY)) {
             Beep(3000,200);
             button = NONE;
             closegraph(CURRENT_WINDOW);
@@ -512,11 +487,12 @@ void runProgram() {
 
             initializeWindow();
         }
-        if(isArrowPressed(mouseX,mouseY) && isEvaluated /*button != ARROW && (button == ANIM_EVAL || button == INSTANT_EVAL)*/)
-        {
+        if(isArrowPressed(mouseX,mouseY) && isEvaluated) {
             Beep(3000,100);
             button = ARROW;
             isEvaluated = false;
+            offsetX = 0;
+            offsetY = 0;
 
             if(originalTree != nullptr) {
                 expressionTree = originalTree->copy();
@@ -528,18 +504,14 @@ void runProgram() {
             drawTree();
         }
     }
-
 }
 
 void readVariables() {
-    BinaryTree* tempTree = unsubstitutedTree->copy();
-    substituteConstants(tempTree);
-
     readVariablesLoop:
 
     Log("\n%s\n\n", infixExpression.c_str());
 
-    originalTree = tempTree->copy();
+    originalTree = unsubstitutedTree->copy();
     std::string var = getNextVariable(originalTree);
 
     while(!isNullOrWhitespace(var)) {
@@ -562,8 +534,10 @@ void readVariables() {
     }
 
     std::string err;
+    BinaryTree* tempTree = originalTree->copy();
+    substituteConstants(tempTree);
 
-    evalExpressionTree(originalTree, err);
+    evalExpressionTree(tempTree, err);
 
     if(!err.empty()) {
         Log("\nERROR: %s\n\n", err.c_str());
@@ -573,8 +547,7 @@ void readVariables() {
     expressionTree = originalTree->copy();
 }
 
-void animEval()
-{
+void animEval() {
     setfillstyle(SOLID_FILL,getbkcolor());
     bar(0,0,1260,HEIGHT);
     drawNewExp();
@@ -592,6 +565,8 @@ void animEval()
     Beep(3000,100);
     offsetX = 0;
     offsetY = 0;
+
+    drawTree();
 
     evalExpressionTreeAnimated(expressionTree);
 }
@@ -618,7 +593,7 @@ double evalExpressionTreeAnimated(BinaryTree* &tree) {
             tree->left = nullptr;
             tree->right = nullptr;
 
-            drawTree();
+            drawAll();
             Beep(2000, 100);
 
             return stod(tree->data);
@@ -635,7 +610,7 @@ double evalExpressionTreeAnimated(BinaryTree* &tree) {
 
         tree->left = nullptr;
 
-        drawTree();
+        drawAll();
         Beep(2000, 100);
 
         return stod(tree->data);
@@ -655,7 +630,7 @@ double evalExpressionTreeAnimated(BinaryTree* &tree) {
             tree->left = nullptr;
             tree->right = nullptr;
 
-            drawTree();
+            drawAll();
             Beep(2000, 100);
 
             return stod(tree->data);
@@ -672,7 +647,7 @@ double evalExpressionTreeAnimated(BinaryTree* &tree) {
 
         tree->left = nullptr;
 
-        drawTree();
+        drawAll();
         Beep(2000, 100);
 
         return stod(tree->data);
@@ -757,7 +732,7 @@ void drawAll(LANGUAGE lng) {
 
 void drawTree() {
     setfillstyle(SOLID_FILL,getbkcolor());
-    bar(0,65,1260,HEIGHT);
+    bar(0,65,1270,HEIGHT);
     settextstyle(textInfo.font,textInfo.direction,2);
 
     if(globalTheme == DEFAULT)
@@ -769,7 +744,7 @@ void drawTree() {
             if(globalTheme == PINKY)
                 setlinestyle(DASHED_LINE,0,1);
 
-    drawNode(expressionTree, 600 + offsetX,100 + offsetY, 200, angleStartLeft, angleStartRight);
+    drawNode(expressionTree, 600 + offsetX,100 + offsetY, LINE_LENGTH, angleStartLeft, angleStartRight);
 }
 
 void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, double angleRight) {
@@ -782,29 +757,24 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, do
         strcpy(temp, tree->data.c_str());
         textW = textwidth(temp);
     }
-    else
-    {
+    else {
         strcpy(temp,"-");
         textW = textwidth("-");
     }
 
     int V,W;
-    if(tree->right == nullptr)
-    {
+    if(tree->right == nullptr) {
         rectangle(x - textW/2 + offsetX, y + offsetY, x + textW/2 + 10 + offsetX, y + 30 + offsetY);
         outtextxy(x - textW/2 + 5  + offsetX, y + 5 + offsetY, temp);
-        if(tree->left != nullptr)
-        {
+        if(tree->left != nullptr) {
             angle(x + offsetX,y+30 + offsetY,PI,V,W, 30);
             drawNode(tree->left,V,W,lineSize, angleLeft, angleRight);
         }
     }
-    else
-    {
+    else {
         rectangle(x - textW/2 + offsetX, y + offsetY, x + textW/2 + 10 + offsetX, y + 30 + offsetY);
         outtextxy(x - textW/2 + 5 + offsetX, y + 5 + offsetY, temp);
-        if(tree->left != nullptr)
-        {
+        if(tree->left != nullptr) {
             angle(x + offsetX,y+30 + offsetY,angleLeft,V,W, lineSize);
 
             drawNode(tree->left,V,W,
@@ -812,8 +782,7 @@ void drawNode(BinaryTree* tree, int x, int y, int lineSize, double angleLeft, do
                      angleLeft - angleDifference > angleMinLeft ? angleLeft - angleDifference : angleMinLeft,
                      angleRight + angleDifference < angleMaxRight ? angleRight + angleDifference : angleMaxRight);
         }
-        if(tree->right != nullptr)
-        {
+        if(tree->right != nullptr) {
             angle(x + offsetX,y+30 + offsetY,angleRight,V,W, lineSize);
 
             drawNode(tree->right,V,W,
@@ -839,20 +808,15 @@ void drawArrow() {
 }
 
 void drawSquares() {
-    if(globalTheme == DEFAULT)
-    {
+    if(globalTheme == DEFAULT) {
         bar(1270,0,WIDTH,HEIGHT);
         setfillstyle(SOLID_FILL,WHITE);
     }
-    else
-        if(globalTheme == GREEN_BLUE)
-        {
+    else if(globalTheme == GREEN_BLUE) {
             bar(1270,0,WIDTH,HEIGHT);
             setfillstyle(SOLID_FILL,COLOR(0,205,205));
         }
-        else
-            if(globalTheme == PINKY)
-            {
+        else if(globalTheme == PINKY) {
                 bar(1270,0,WIDTH,HEIGHT);
                 setfillstyle(BKSLASH_FILL,COLOR(96, 15, 143));
             }
@@ -942,70 +906,77 @@ void options() {
     rectangle(1355,575,1520,610);
     outtextxy(1410,580,"PINKY");
 
-    while(button != OPTIONS_Back)
-    {
+    while(button != OPTIONS_Back) {
         getmouseclick(WM_LBUTTONDOWN, mouseX, mouseY);
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 485 && mouseY <= 520 && globalTheme != DEFAULT)
-        {
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 485 && mouseY <= 520 && globalTheme != DEFAULT) {
             button = OPTIONS_Default;
 
             isEvaluated = false;
-            expressionTree = unsubstitutedTree->copy();
-            originalTree = expressionTree->copy();
+            if(originalTree != nullptr) {
+                expressionTree = originalTree->copy();
+                originalTree = nullptr;
+            }
+            else
+                if(unsubstitutedTree != nullptr)
+                    expressionTree = unsubstitutedTree->copy();
 
             initializeWindow(DEFAULT);
             resetMouseClick();
             break;
         }
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && globalTheme != GREEN_BLUE)
-        {
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 530 && mouseY <= 565 && globalTheme != GREEN_BLUE) {
             button = OPTIONS_Green_Blue;
 
             isEvaluated = false;
-            expressionTree = unsubstitutedTree->copy();
-            originalTree = expressionTree->copy();
+            if(originalTree != nullptr) {
+                expressionTree = originalTree->copy();
+                originalTree = nullptr;
+            }
+            else
+                if(unsubstitutedTree != nullptr)
+                    expressionTree = unsubstitutedTree->copy();
 
             initializeWindow(GREEN_BLUE);
             resetMouseClick();
             break;
         }
-        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && globalTheme != PINKY)
-        {
+        if(mouseX >= 1355 && mouseX <= 1520 && mouseY >= 575 && mouseY <= 610 && globalTheme != PINKY) {
             button = OPTIONS_Pinky;
 
             isEvaluated = false;
-            expressionTree = unsubstitutedTree->copy();
-            originalTree = expressionTree->copy();
+            if(originalTree != nullptr) {
+                expressionTree = originalTree->copy();
+                originalTree = nullptr;
+            }
+            else
+                if(unsubstitutedTree != nullptr)
+                    expressionTree = unsubstitutedTree->copy();
+
             initializeWindow(PINKY);
             resetMouseClick();
             break;
         }
-        if(mouseX >= 1345 && mouseX <= 1420 && mouseY >= 280 && mouseY <= 330 && lng != EN)
-        {
+        if(mouseX >= 1345 && mouseX <= 1420 && mouseY >= 280 && mouseY <= 330 && lng != EN) {
             lng = EN;
             Beep(3000,100);
             Beep(3000,100);
         }
-        if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 280 && mouseY <= 330 && lng != RO)
-        {
+        if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 280 && mouseY <= 330 && lng != RO) {
             lng = RO;
             Beep(3000,100);
             Beep(3000,100);
         }
-        if(mouseX >= 1345 && mouseX <=1420 && mouseY >= 350 && mouseY <= 400 && lng != DE)
-        {
+        if(mouseX >= 1345 && mouseX <=1420 && mouseY >= 350 && mouseY <= 400 && lng != DE) {
             lng = DE;
             Beep(3000,100);
             Beep(3000,100);
         }
-        if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 350 && mouseY <= 400 && lng != FR)
-        {
+        if(mouseX >= 1445 && mouseX <=1520 && mouseY >= 350 && mouseY <= 400 && lng != FR) {
             lng = FR;
             Beep(3000,100);
             Beep(3000,100);
         }
-        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != OPTIONS_Back)
-        {
+        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != OPTIONS_Back) {
             button = OPTIONS_Back;
 
             Beep(3000,100);
@@ -1021,7 +992,6 @@ void options() {
             drawQuit();
             resetMouseClick();
         }
-
     }
 }
 
@@ -1031,24 +1001,17 @@ void about() {
 
     Beep(3000,100);
 
-    // This draws the "Back" button.
     rectangle(1310,645,1570,725);
     outtextxy(aboutBackText[lng].posX,aboutBackText[lng].posY,aboutBackText[lng].word);
 
-    // This draws the link rectangle.
     rectangle(1310,250,1570,320);
-    outtextxy(1390,265,"LINK");
+    outtextxy(1390,265,"GitHub");
 
-    while(button != ABOUT_Back)
-    {
+    while(button != ABOUT_Back) {
         getmouseclick(WM_LBUTTONDOWN,mouseX, mouseY);
         if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 250 && mouseY <= 320)
-        {
- //           ShellExecute(HWND_DESKTOP, "open", "https://www.youtube.com/watch?v=TPMubL67Mxo", NULL, NULL, SW_SHOWDEFAULT);
             ShellExecute(HWND_DESKTOP, "open", "https://github.com/UnexomWid/ExTree", NULL, NULL, SW_SHOWDEFAULT);
-        }
-        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != ABOUT_Back)
-        {
+        if(mouseX >= 1310 && mouseX <=1570 && mouseY >= 645 && mouseY <= 725 && button != ABOUT_Back) {
             button = ABOUT_Back;
 
             Beep(3000,100);
@@ -1064,7 +1027,6 @@ void about() {
             resetMouseClick();
         }
     }
-
 }
 
 void Log(const char* format, ...) {

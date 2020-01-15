@@ -6,8 +6,7 @@ TreeQueue::TreeQueue(){
     last =  new TreeNode;
 }
 
-void TreeQueue::push(BinaryTree* element)
-{
+void TreeQueue::push(BinaryTree* element) {
     TreeNode* node = new TreeNode;
     node->data = element;
     if(size == 0)
@@ -22,8 +21,7 @@ void TreeQueue::push(BinaryTree* element)
     ++size;
 }
 
-void TreeQueue::pop()
-{
+void TreeQueue::pop() {
     if(size == 0) return;
 
     TreeNode* node = first;
@@ -32,15 +30,13 @@ void TreeQueue::pop()
     --size;
 }
 
-BinaryTree* TreeQueue::front()
-{
+BinaryTree* TreeQueue::front() {
     if(size > 0) return first->data;
 
     return nullptr;
 }
 
-bool TreeQueue::empty()
-{
+bool TreeQueue::empty() {
     return size == 0;
 }
 

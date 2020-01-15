@@ -4,8 +4,7 @@ TreeStack::TreeStack(){
     size = 0;
     first = nullptr;
 }
-void TreeStack::push(BinaryTree* element)
-{
+void TreeStack::push(BinaryTree* element) {
     TreeNode* node = new TreeNode;
 
     node->data = element;
@@ -15,16 +14,14 @@ void TreeStack::push(BinaryTree* element)
     ++size;
 }
 
-BinaryTree* TreeStack::top()
-{
+BinaryTree* TreeStack::top() {
     if(size > 0) return first->data;
 
     BinaryTree* emptyString;
     return emptyString;
 }
 
-void TreeStack::pop()
-{
+void TreeStack::pop() {
     if(size == 0) return;
 
     TreeNode* node = first;
@@ -34,7 +31,6 @@ void TreeStack::pop()
     --size;
 }
 
-bool TreeStack::empty()
-{
+bool TreeStack::empty() {
     return size == 0;
 }
