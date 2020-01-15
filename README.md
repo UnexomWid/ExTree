@@ -1,6 +1,8 @@
 # About <a href="https://en.wikipedia.org/wiki/C%2B%2B11"><img align="right" src="https://img.shields.io/badge/C%2B%2B-11-00599C?logo=C%2B%2B" alt="C++ 11" /></a>
 
-ExTree is an expression tree visualizer and evaluator.
+ExTree is an expression tree visualizer and evaluator that supports all Visual Basic math functions and operators.
+
+It was written in [C++11](https://en.wikipedia.org/wiki/C%2B%2B11).
 
 # License <a href="https://github.com/UnexomWid/ExTree/blob/master/LICENSE"><img align="right" src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 
@@ -23,7 +25,7 @@ The dependencies are as follows:
   <img src="img/ExTree.png" alt="ExTree">
 </p>
 
-ExTree supports all Visual Basic functions and operators, as well as variables and constants.
+ExTree supports all Visual Basic math functions and operators, as well as variables and constants.
 
 ## Supported functions
 
