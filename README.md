@@ -31,7 +31,7 @@ For a complete list of supported functions, click [here](https://docs.microsoft.
 
 ## Supported operators
 
-The supported constnats are as follows:
+The supported operators are as follows:
 
 | Identifier |          Name         |
 |:----------:|:---------------------:|
@@ -54,7 +54,7 @@ The supported constnats are as follows:
 
 ## Supported constants
 
-The supported constnats are as follows (_case insensitive_):
+The supported constants are as follows (_case insensitive_):
 
 |  Name |                 Value                 |
 |:-----:|:-------------------------------------:|
@@ -67,8 +67,8 @@ The supported constnats are as follows (_case insensitive_):
 
 There are 2 evaluation types:
 
-* Instant Evaluation: the expression is evaluated instantly
-* Animated Evaluation: the expression is evaluated step-by-step
+* **Instant Evaluation:** the expression is evaluated instantly
+* **Animated Evaluation:** the expression is evaluated step-by-step
 
 You can choose whichever type you want from the menu.
 
