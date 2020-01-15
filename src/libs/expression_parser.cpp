@@ -140,7 +140,8 @@ bool isBinaryOperator(const std::string &token) {
             lowerToken == "not" ||
             lowerToken == "and" ||
             lowerToken == "or"  ||
-            lowerToken == "xor" );
+            lowerToken == "xor" ||
+            lowerToken == "mod" );
 }
 
 bool isInteger(double value) {
@@ -361,6 +362,13 @@ double evalBinaryOperator(const std::string &op, double left, double right, std:
             return 0;
         }
         return (int) left ^ (int) right;
+    }
+    if(op == "mod") {
+        if(!isInteger(left) || !isInteger(right)) {
+            error = "Cannot apply 'xor' operator on floating point numbers " + toString(left) + " and " + toString(right);
+            return 0;
+        }
+        return (int) left % (int) right;
     }
 
     error = "Unknown binary operator '" + op + "'";
